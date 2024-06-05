@@ -8,7 +8,7 @@
 
 // 定数バッファ用データ構造体
 struct ConstBufferDataWorldTransform {
-	Matrix4x4 matWorld; // ローカル → ワールド変換行列
+	Matrix4x4 matWorld_; // ローカル → ワールド変換行列
 };
 
 /// <summary>
@@ -16,6 +16,7 @@ struct ConstBufferDataWorldTransform {
 /// </summary>
 class WorldTransform {
 public:
+	void UpdateMatrix();
 	// ローカルスケール
 	Vector3 scale_ = {1, 1, 1};
 	// X,Y,Z軸回りのローカル回転角
