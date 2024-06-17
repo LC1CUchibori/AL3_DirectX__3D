@@ -74,20 +74,15 @@ void Player::Update(){
 		}
 		if (Input::GetInstance()->PushKey(DIK_UP)) {
 			// ジャンプ初速
-			velocity_.x += 0;
-			velocity_.y += kJmpAcceleration;
-			velocity_.z += 0;
+			velocity_.y += kJumpAcceleration;
 		}
 		// 空中
-		else {
-			// 落下速度
-			velocity_.x += 0;
-			velocity_.y += kGravityAcceleration;
-			velocity_.z += 0;
-			// 落下速度制限
-			velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
-
-		}
+	}
+	else {
+		// 落下速度
+		velocity_.y -= kGravityAcceleration;
+		// 落下速度制限
+		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
 
 	// 移動
@@ -113,6 +108,7 @@ void Player::Update(){
 		worldTransform_.rotation_.y = destinationRotationY;
 
 	}
+
 	// 着地フラグ
 	bool landing = false;
 
@@ -136,7 +132,7 @@ void Player::Update(){
 			// めり込み排斥
 			worldTransform_.translation_.y = 1.0f;
 			// 摩擦で横方向速度が減衰する
-			velocity_.x *= (1.0f - kAcceleration);
+			velocity_.x *= (1.0f - kAttenuation);
 			// 下方向速度でリセット
 			velocity_.y = 0.0f;
 			// 接地状態に移行

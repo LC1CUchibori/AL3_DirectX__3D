@@ -46,7 +46,6 @@ private:
 	Vector3 velocity_ = {};
 
 	static inline const float kAcceleration = 0.1f;
-	
 	static inline const float kLimitRunSpeed = 0.1f;
 	static inline const float kAttenuation = 0.1f;
 
@@ -69,10 +68,10 @@ private:
 	bool onGround_ = true;
 
 	// 重力加速度
-	static inline const float kGravityAcceleration = 0.1f;
+	static inline const float kGravityAcceleration = 0.04f;
 	// 最大落下速度
-	static inline const float kLimitFallSpeed = 0.1f;
+	static inline const float kLimitFallSpeed = 0.5f;
 	// ジャンプ初速
-	static inline const float kJmpAcceleration = 0.1f;
+	static inline const float kJumpAcceleration = 0.5f;
 };
 
