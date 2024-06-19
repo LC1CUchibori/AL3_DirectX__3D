@@ -65,6 +65,12 @@ void GameScene::Initialize() {
 
 	GenerateBlcoks();
 
+	// カメラコントロールの初期化
+	cameraController_ = new CameraController();// 生成
+	cameraController_->Initialize();
+	cameraController_->SetTarget(player_);
+	cameraController_->Reset();
+
 	// 要素数
 	/*const uint32_t kNumBlockVirtical = 10;
 	const uint32_t kNumBlockHorizontal = 20;*/
@@ -126,6 +132,8 @@ void GameScene::Update() {
 	// 天球の更新
 	skydome_->Update();
 
+	// カメラコントローラの更新
+	cameraController_->Update();
 
 
 	// 縦横ブロック更新

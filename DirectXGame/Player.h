@@ -33,6 +33,8 @@ public:
 		this->z += other.z;
 	}
 
+	WorldTransform& GetWorldTransform() { return worldTransform_; }
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -44,6 +46,7 @@ private:
 	ViewProjection* viewProjection_ = nullptr;
 
 	Vector3 velocity_ = {};
+
 
 	static inline const float kAcceleration = 0.1f;
 	static inline const float kLimitRunSpeed = 0.1f;
