@@ -71,6 +71,11 @@ void GameScene::Initialize() {
 	cameraController_->SetTarget(player_);
 	cameraController_->Reset();
 
+	// カメラの移動範囲の指定
+	Vector4 movableArea(0,100.0f,0,100.0f); // 適切な範囲を設定
+	cameraController_->SetMovableArea(movableArea);
+
+
 	// 要素数
 	/*const uint32_t kNumBlockVirtical = 10;
 	const uint32_t kNumBlockHorizontal = 20;*/

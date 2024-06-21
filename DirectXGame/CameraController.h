@@ -17,7 +17,13 @@ public:
 
 	void Reset();
 
-	void SetMovableArea(Vector4 area) { movableArea_ = area; }
+	void SetMovableArea(const Vector4& area)
+	{
+		movableArea_ .left= area.x; 
+		movableArea_.right = area.y;
+		movableArea_.bottom = area.z;
+		movableArea_.top = area.w;
+	}
 
 private:
 	// ビュープロジェクション
@@ -26,6 +32,10 @@ private:
 	Player* target_ = nullptr;
 
 	Vector3 targetOffset_{ 0,0,-15.0f };
+
+	Vector3 cameraOffset_{ 0,0,-15.0f };
+
+	static inline const float kInterpolationRate = 1.0f;
 
 	// 矩形
 	struct Rect {
