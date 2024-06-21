@@ -10,6 +10,14 @@ class CameraController {
 
 public:
 
+	// 矩形
+	struct Rect {
+		float left = 0.0f;// 左端
+		float right = 1.0f;// 右端
+		float bottom = 0.0f;// 下端
+		float top = 1.0f;// 上端
+	};
+
 	void Initialize();
 
 	void Update();
@@ -18,12 +26,13 @@ public:
 
 	void Reset();
 
-	void SetMovableArea(const Vector4& area)
+
+	void SetMovableArea(const Rect& area)
 	{
-		movableArea_ .left= area.x; 
-		movableArea_.right = area.y;
-		movableArea_.bottom = area.z;
-		movableArea_.top = area.w;
+		movableArea_ .left= area.left; 
+		movableArea_.right = area.right;
+		movableArea_.bottom = area.bottom;
+		movableArea_.top = area.top;
 	}
 
 	ViewProjection GetViewPosition();
@@ -36,19 +45,13 @@ private:
 
 	Vector3 targetOffset_{ 0,0,-15.0f };
 
-	Vector3 cameraOffset_{ 0,0,-15.0f };
+	Vector3 dest_{ 0,0,-15.0f };
 
-	static inline const float kInterpolationRate = 0.5f;
+	static inline const float kInterpolationRate = 1.0f;
 
-	const ViewProjection& GetViewProjection()const { return viewProjection_; }
+	static inline const float kVelocityBias = 30.0f;
 
-	// 矩形
-	struct Rect {
-		float left = 0.0f;// 左端
-		float right = 1.0f;// 右端
-		float bottom = 0.0f;// 下端
-		float top = 1.0f;// 上端
-	};
+    const ViewProjection& GetViewProjection()const { return viewProjection_; }
 
 	Rect movableArea_ = { 0,100,0,100 };
 

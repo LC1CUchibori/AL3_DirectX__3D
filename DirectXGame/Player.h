@@ -35,6 +35,8 @@ public:
 
 	WorldTransform& GetWorldTransform() { return worldTransform_; }
 
+	Vector3& GetVelocity() {return velocity_; }
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
