@@ -38,7 +38,9 @@ private:
 
 	Vector3 cameraOffset_{ 0,0,-15.0f };
 
-	static inline const float kInterpolationRate = 1.0f;
+	static inline const float kInterpolationRate = 0.5f;
+
+	const ViewProjection& GetViewProjection()const { return viewProjection_; }
 
 	// 矩形
 	struct Rect {
