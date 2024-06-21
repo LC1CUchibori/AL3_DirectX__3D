@@ -44,3 +44,8 @@ void CameraController::Reset()
 	viewProjection_.translation_.y = targetWorldTransform.translation_.y + targetOffset_.y;
 	viewProjection_.translation_.z = targetWorldTransform.translation_.z + targetOffset_.z;
 }
+
+ViewProjection CameraController::GetViewPosition()
+{
+    return ViewProjection();
+}

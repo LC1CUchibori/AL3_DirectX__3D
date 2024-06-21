@@ -112,6 +112,7 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mapChipField.cpp" />
+    <ClCompile Include="MathUtilityForText.cpp" />
     <ClCompile Include="myMath.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />

@@ -76,5 +76,7 @@ private:
 	static inline const float kLimitFallSpeed = 0.5f;
 	// ジャンプ初速
 	static inline const float kJumpAcceleration = 0.5f;
+
+	const WorldTransform& GetWorldTransform()const { return worldTransform_; }
 };
 

@@ -1,6 +1,7 @@
 #include "Viewprojection.h"
 #include "Player.h"
 #include "Vector3.h"
+#include "MathUtilityForText.h"
 
 
 class Player;
@@ -25,6 +26,8 @@ public:
 		movableArea_.top = area.w;
 	}
 
+	ViewProjection GetViewPosition();
+
 private:
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
@@ -46,4 +49,5 @@ private:
 	};
 
 	Rect movableArea_ = { 0,100,0,100 };
+
 };
