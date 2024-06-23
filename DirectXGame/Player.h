@@ -67,7 +67,7 @@ private:
 	// 旋回タイマー
 	float turnTimer_ = 0.0f;
 	// 旋回時間<秒>
-	static inline const float kTimeTurn = 0.3f;
+	static inline const float kTimeTurn = 0.0f;
 
 	// 接地状態フラグ
 	bool onGround_ = true;

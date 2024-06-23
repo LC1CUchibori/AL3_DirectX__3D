@@ -37,22 +37,28 @@ public:
 
 	ViewProjection GetViewPosition();
 
+	const ViewProjection& GetViewProjection()const { return viewProjection_; }
+
 private:
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
 
 	Player* target_ = nullptr;
 
+	// 追従対象とカメラの座標の差（オフセット）
 	Vector3 targetOffset_{ 0,0,-15.0f };
 
 	Vector3 dest_{ 0,0,-15.0f };
 
+	// 座標補間割合
 	static inline const float kInterpolationRate = 1.0f;
 
-	static inline const float kVelocityBias = 30.0f;
+	// 速度掛率
+	static inline const float kVelocityBias = 15.0f;
 
-    const ViewProjection& GetViewProjection()const { return viewProjection_; }
-
+	// カメラ移動範囲
 	Rect movableArea_ = { 0,100,0,100 };
 
+	// 追従対象の各方向へのカメラ移動範囲
+	static inline const Rect margin = {-25.0f, 25.0f, -50.0f, 50.0f};
 };

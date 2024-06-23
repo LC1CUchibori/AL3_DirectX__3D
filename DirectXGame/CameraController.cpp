@@ -2,6 +2,7 @@
 #include "CameraController.h"
 #include "Player.h"
 
+
 // 線形補間関数
 template <typename T>
 T Lerp(const T& a, const T& b, float t) {
@@ -19,14 +20,24 @@ void CameraController::Initialize()
 		const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 		const Vector3& targetVelocity = target_->GetVelocity();
 		// 追従対象の座標、移動速度とオフセットで目標座標を計算
-		dest_.x = targetWorldTransform.translation_.x + targetVelocity.x * kVelocityBias + targetOffset_.x;
-		dest_.y = targetWorldTransform.translation_.y + targetVelocity.y * kVelocityBias + targetOffset_.y;
-		dest_.z = targetWorldTransform.translation_.z + targetVelocity.z * kVelocityBias + targetOffset_.z;
+		dest_.x = targetWorldTransform.translation_.x + targetOffset_.x + targetVelocity.x * kVelocityBias;
+		dest_.y = targetWorldTransform.translation_.y + targetOffset_.y + targetVelocity.y * kVelocityBias;
+		dest_.z = targetWorldTransform.translation_.z + targetOffset_.z + targetVelocity.z * kVelocityBias;
 
 		// 座標補間によりゆったり追従
 		viewProjection_.translation_.x = Lerp(viewProjection_.translation_.x, dest_.x, kInterpolationRate);
 		viewProjection_.translation_.y = Lerp(viewProjection_.translation_.y, dest_.y, kInterpolationRate);
 		viewProjection_.translation_.z = Lerp(viewProjection_.translation_.z, dest_.z, kInterpolationRate);
+
+		// 追従対象が画面外に出ないように補正
+		viewProjection_.translation_.x =
+			max(viewProjection_.translation_.x, targetWorldTransform.translation_.x + margin.left);
+		viewProjection_.translation_.x =
+			min(viewProjection_.translation_.x, targetWorldTransform.translation_.x + margin.right);
+		viewProjection_.translation_.y =
+			max(viewProjection_.translation_.y, targetWorldTransform.translation_.y + margin.bottom);
+		viewProjection_.translation_.y =
+			min(viewProjection_.translation_.y, targetWorldTransform.translation_.y+ margin.top);
 
 		// 移動範囲制限
 		viewProjection_.translation_.x = std::clamp(viewProjection_.translation_.x, movableArea_.left, movableArea_.right);
