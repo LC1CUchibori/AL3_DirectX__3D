@@ -74,6 +74,8 @@ void GameScene::Initialize() {
 	CameraController::Rect movableArea_ = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovableArea(movableArea_);
 
+
+
 	// 要素数
 	/*const uint32_t kNumBlockVirtical = 10;
 	const uint32_t kNumBlockHorizontal = 20;*/

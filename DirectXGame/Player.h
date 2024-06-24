@@ -7,6 +7,9 @@
 /// <summary>
 /// 自キャラ
 /// </summary>
+
+class MapChipField;
+
 class Player {
 public:
 	/// <summary>
@@ -37,7 +40,16 @@ public:
 
 	Vector3& GetVelocity() {return velocity_; }
 
+	void SetMapChipField(MapChipField* mapChipField) { MapChipField* mapChipField_; }
+
 private:
+
+	// 左右
+	enum class LRDirection {
+		kRight,
+		kLeft,
+	};
+
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
@@ -49,18 +61,14 @@ private:
 
 	Vector3 velocity_ = {};
 
+	LRDirection lrDirection_ = LRDirection::kRight;
+
+	MapChipField* mapChipField_ = nullptr;
+
 
 	static inline const float kAcceleration = 0.03f;
 	static inline const float kLimitRunSpeed = 0.6f;
 	static inline const float kAttenuation = 0.03f;
-
-	// 左右
-	enum class LRDirection {
-		kRight,
-		kLeft,
-	};
-
-	LRDirection lrDirection_ = LRDirection::kRight;
 
 	// 旋回開始時の角度
 	float turnFirstRotationY_ = 0.0f;
