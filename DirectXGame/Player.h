@@ -50,9 +50,9 @@ private:
 	Vector3 velocity_ = {};
 
 
-	static inline const float kAcceleration = 0.1f;
-	static inline const float kLimitRunSpeed = 0.1f;
-	static inline const float kAttenuation = 0.1f;
+	static inline const float kAcceleration = 0.03f;
+	static inline const float kLimitRunSpeed = 0.6f;
+	static inline const float kAttenuation = 0.03f;
 
 	// 左右
 	enum class LRDirection {
@@ -73,11 +73,11 @@ private:
 	bool onGround_ = true;
 
 	// 重力加速度
-	static inline const float kGravityAcceleration = 0.04f;
+	static inline const float kGravityAcceleration = 0.1f;
 	// 最大落下速度
-	static inline const float kLimitFallSpeed = 0.5f;
+	static inline const float kLimitFallSpeed = 0.3f;
 	// ジャンプ初速
-	static inline const float kJumpAcceleration = 0.5f;
+	static inline const float kJumpAcceleration = 0.6f;
 
 	const WorldTransform& GetWorldTransform()const { return worldTransform_; }
 };
