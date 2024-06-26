@@ -96,7 +96,7 @@ void Player::Update(){
 	// 旋回制御
 	if(turnTimer_>0.0f)
 	{
-		turnTimer_ -= 1.0f / 60.0f;
+		turnTimer_ -= 0.015f;
 		// 左右の自キャラ角度テーブル
 		float destinationRotationYTable[] = {
 			std::numbers::pi_v<float> / 2.0f,
