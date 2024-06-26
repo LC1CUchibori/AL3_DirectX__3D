@@ -44,6 +44,10 @@ void GameScene::Initialize() {
 
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 17);
 
+	// マップチップフィールドの生成
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/map.csv");
+
 	// 自キャラの生成
 	player_ = new Player();
 
@@ -51,6 +55,8 @@ void GameScene::Initialize() {
 
 	// 自キャラの初期化
 	player_->Initialize(modelPlayer_,&viewProjection_,playerPosition);
+
+	player_->SetMapChipField(mapChipField_);
 
 
 	// 天球の生成
@@ -60,8 +66,6 @@ void GameScene::Initialize() {
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_,&viewProjection_);
 
-	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resources/map.csv");
 
 	GenerateBlcoks();
 

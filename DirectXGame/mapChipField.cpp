@@ -14,6 +14,14 @@ namespace {
 
 }
 
+MapChipField::IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position)
+{
+	IndexSet indexSet = {};
+	indexSet.xIndex = (worldTransform_.translation_.x + kBlockWidth / 2) / kBlockWidth;
+	indexSet.yIndex = (worldTransform_.translation_.y + kBlockHeight / 2) / kBlockHeight;
+	return IndexSet();
+}
+
 void MapChipField::ResetMapChipData()
 {
 	// マップチップデータをリセット

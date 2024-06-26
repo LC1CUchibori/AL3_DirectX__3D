@@ -42,13 +42,47 @@ public:
 
 	void SetMapChipField(MapChipField* mapChipField) { MapChipField* mapChipField_; }
 
-private:
+	void MoveInput();
+
+	// マップとのあたり判定情報
+	struct CollisionMapInfo
+	{
+		bool CeilingCollisionFlag = false;
+		bool LandingFlag = false;
+		bool WallConstactFlag = false;
+		Vector3 movement_;
+	};
+
+	void MapCollision(CollisionMapInfo& info);
+
+	void MapCollisionUp(CollisionMapInfo& info);
+
+	void MapCollisionDown(CollisionMapInfo& info);
+
+	void MapCollisionLeft(CollisionMapInfo& info);
+
+	void MapCollisionRight(CollisionMapInfo& info);
 
 	// 左右
 	enum class LRDirection {
 		kRight,
 		kLeft,
 	};
+
+	// 角
+	enum Corner{
+		kRightBottom,    // 右下
+		kLeftBottom,     // 左下
+		kRightTop,       // 右上
+		kLeftTop,        // 左上
+
+		kNumCorner       // 要素数
+	};
+
+	Vector3 CornerPosition(const Vector3& center, Corner corner);
+
+
+private:
 
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -64,7 +98,6 @@ private:
 	LRDirection lrDirection_ = LRDirection::kRight;
 
 	MapChipField* mapChipField_ = nullptr;
-
 
 	static inline const float kAcceleration = 0.03f;
 	static inline const float kLimitRunSpeed = 0.6f;
@@ -88,5 +121,9 @@ private:
 	static inline const float kJumpAcceleration = 0.6f;
 
 	const WorldTransform& GetWorldTransform()const { return worldTransform_; }
+
+	// キャラクターのあたり判定サイズ
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
 };
 

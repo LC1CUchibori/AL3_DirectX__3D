@@ -4,6 +4,7 @@
 #include <cassert>
 #include<numbers>
 #include<algorithm>
+#include "mapChipField.h"
 
 void Player::Initialize(Model* model, ViewProjection* viewProjection,const Vector3& position){
 
@@ -26,6 +27,77 @@ void Player::Update(){
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
 
+	// 1,移動入力
+
+	// 衝突情報を初期化
+	CollisionMapInfo collisionMapInfo;
+	// 移動量に速度の値をコピー
+	collisionMapInfo.movement_ = velocity_;
+
+	// マップ衝突チェック
+	MapCollision(collisionMapInfo);
+
+
+
+	// 行列計算
+	worldTransform_.UpdateMatrix();
+
+	// 旋回制御
+	if(turnTimer_>0.0f)
+	{
+		turnTimer_ -= 1.0f / 60.0f;
+		// 左右の自キャラ角度テーブル
+		float destinationRotationYTable[] = {
+			std::numbers::pi_v<float> / 2.0f,
+			std::numbers::pi_v<float>*3.0f / 2.0f
+		};
+		// 状態に応じた角度を取得する
+		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
+		// 自キャラの角度を設定する
+		worldTransform_.rotation_.y = destinationRotationY;
+
+	}
+
+	// 着地フラグ
+	bool landing = false;
+
+	// 地面とのあたり判定
+	if (velocity_.y < 0) {
+		if (worldTransform_.translation_.y <= 1.0f) {
+			landing = true;
+		}
+	}
+
+	// 接地判定
+	if (onGround_) {
+		// ジャンプ開始
+		if (velocity_.y > 0.0f) {
+			// 空中状態の移行
+			onGround_ = false;
+		}
+	}else {
+		// 着地
+		if (landing) {
+			// めり込み排斥
+			worldTransform_.translation_.y = 1.5f;
+			// 摩擦で横方向速度が減衰する
+			velocity_.x *= (1.0f - kAttenuation);
+			// 下方向速度でリセット
+			velocity_.y = 0.0f;
+			// 接地状態に移行
+			onGround_ = true;
+		}
+	}
+}
+
+void Player::Draw(){
+
+	// 3Dモデルを描画
+	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
+}
+
+void Player::MoveInput()
+{
 	// 移動入力
 	// 接地状態
 	if (onGround_) {
@@ -90,59 +162,90 @@ void Player::Update(){
 	worldTransform_.translation_.y += velocity_.y;
 	worldTransform_.translation_.z += velocity_.z;
 
-	// 行列計算
-	worldTransform_.UpdateMatrix();
+}
 
-	// 旋回制御
-	if(turnTimer_>0.0f)
-	{
-		turnTimer_ -= 1.0f / 60.0f;
-		// 左右の自キャラ角度テーブル
-		float destinationRotationYTable[] = {
-			std::numbers::pi_v<float> / 2.0f,
-			std::numbers::pi_v<float>*3.0f / 2.0f
-		};
-		// 状態に応じた角度を取得する
-		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-		// 自キャラの角度を設定する
-		worldTransform_.rotation_.y = destinationRotationY;
+void Player::MapCollision(CollisionMapInfo& info)
+{
+	MapCollisionUp(info);
+	MapCollisionDown(info);
+	MapCollisionLeft(info);
+	MapCollisionRight(info);
+}
 
+void Player::MapCollisionUp(CollisionMapInfo& info)
+{
+
+	// 上昇あり？
+	if (info.movement_.y <= 0) {
+		return;
+	}
+	
+	// 移動後の4つの角の座標
+	std::array<Vector3, kNumCorner>positonsNew;
+
+	for (uint32_t i = 0; i < positonsNew.size(); ++i) {
+		positonsNew[i] = CornerPosition(worldTransform_.translation_ + info.movement_, static_cast<Corner>(i));
 	}
 
-	// 着地フラグ
-	bool landing = false;
+	MapChipType mapChipType;
+	// 真上のあたり判定を行う
+	bool hit = false;
+	// 左上点の判定
+	MapChipField::IndexSet indexSet
+}
 
-	// 地面とのあたり判定
-	if (velocity_.y < 0) {
-		if (worldTransform_.translation_.y <= 1.0f) {
-			landing = true;
-		}
-	}
+void Player::MapCollisionDown(CollisionMapInfo& info)
+{
+	// 移動後の4つの角の座標
+	std::array<Vector3, kNumCorner>positonsNew;
 
-	// 接地判定
-	if (onGround_) {
-		// ジャンプ開始
-		if (velocity_.y > 0.0f) {
-			// 空中状態の移行
-			onGround_ = false;
-		}
-	}else {
-		// 着地
-		if (landing) {
-			// めり込み排斥
-			worldTransform_.translation_.y = 1.5f;
-			// 摩擦で横方向速度が減衰する
-			velocity_.x *= (1.0f - kAttenuation);
-			// 下方向速度でリセット
-			velocity_.y = 0.0f;
-			// 接地状態に移行
-			onGround_ = true;
-		}
+	for (uint32_t i = 0; i < positonsNew.size(); ++i) {
+		positonsNew[i] = CornerPosition(worldTransform_.translation_ + info.movement_, static_cast<Corner>(i));
 	}
 }
 
-void Player::Draw(){
+void Player::MapCollisionLeft(CollisionMapInfo& info)
+{
+	// 移動後の4つの角の座標
+	std::array<Vector3, kNumCorner>positonsNew;
 
-	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
+	for (uint32_t i = 0; i < positonsNew.size(); ++i) {
+		positonsNew[i] = CornerPosition(worldTransform_.translation_ + info.movement_, static_cast<Corner>(i));
+	}
 }
+
+void Player::MapCollisionRight(CollisionMapInfo& info)
+{
+	// 移動後の4つの角の座標
+	std::array<Vector3, kNumCorner>positonsNew;
+
+	for (uint32_t i = 0; i < positonsNew.size(); ++i) {
+		positonsNew[i] = CornerPosition(worldTransform_.translation_ + info.movement_, static_cast<Corner>(i));
+	}
+}
+
+Vector3 Player::CornerPosition(const Vector3& center, Corner corner)
+{
+	/*if (corner == kRightBottom) {
+		return center + {+kWidth / 2.0f, -kHeight / 2.0f, 0};
+	}
+	else if (corner == kLeftBottom) {
+		return center + {-kWidth / 2.0f, -kHeight / 2.0f, 0};
+	}
+	else if (corner == kRightTop) {
+		return center + {+kWidth / 2.0f, +kHeight / 2.0f, 0};
+	}
+	else{
+		return center + {-kWidth / 2.0f, +kHeight / 2.0f, 0};
+	}*/
+
+	Vector3 offsetTable[kNumCorner] = {
+		{+kWidth / 2.0f,-kHeight / 2.0f,0}, // kRightBottom
+		{-kWidth / 2.0f,-kHeight / 2.0f,0}, // kLeftBottom
+		{+kWidth / 2.0f,+kHeight / 2.0f,0}, // kRightTop
+		{-kWidth / 2.0f,+kHeight / 2.0f,0}  // kleftTop
+	};
+
+	return center + offsetTable[static_cast<uint32_t>(corner)];
+}
+
