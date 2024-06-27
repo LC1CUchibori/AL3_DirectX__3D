@@ -37,7 +37,7 @@ public:
 		this->z += other.z;
 	}
 
-	WorldTransform& GetWorldTransform() { return worldTransform_; }
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
 	Vector3& GetVelocity() {return velocity_; }
 
@@ -95,21 +95,14 @@ private:
 	WorldTransform worldTransform_;
 	// モデル
 	Model* model_ = nullptr;
-	// テクスチャハンドル
-	uint32_t textureHandle_ = 0u;
-
 	ViewProjection* viewProjection_ = nullptr;
 
 	Vector3 velocity_ = {};
+	static inline const float kAcceleration = 0.01f;
+	static inline const float kAttenuation = 0.2f;
+	static inline const float kLimitRunSpeed = 1.0f;
 
 	LRDirection lrDirection_ = LRDirection::kRight;
-
-	MapChipField* mapChipField_ = nullptr;
-
-	static inline const float kAcceleration = 0.01f;
-	static inline const float kLimitRunSpeed = 1.0f;
-	static inline const float kAttenuation = 0.2f;
-
 	// 旋回開始時の角度
 	float turnFirstRotationY_ = 0.0f;
 	// 旋回タイマー
@@ -119,7 +112,6 @@ private:
 
 	// 接地状態フラグ
 	bool onGround_ = true;
-
 	// 重力加速度
 	static inline const float kGravityAcceleration = 0.05f;
 	// 最大落下速度
@@ -127,8 +119,8 @@ private:
 	// ジャンプ初速
 	static inline const float kJumpAcceleration = 0.7f;
 
-	const WorldTransform& GetWorldTransform()const { return worldTransform_; }
 
+	MapChipField* mapChipField_ = nullptr;
 	// キャラクターのあたり判定サイズ
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;

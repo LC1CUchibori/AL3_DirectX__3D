@@ -1,12 +1,12 @@
 #define NOMINMAX
 #include "Player.h"
 #include "Input.h"
-#include <cassert>
-#include<numbers>
-#include<algorithm>
 #include "mapChipField.h"
+#include <algorithm>
+#include <cassert>
+#include <numbers>
 
-void Player::Initialize(Model* model, ViewProjection* viewProjection,const Vector3& position){
+void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
 
 	// NULLチェック
 	assert(model);
@@ -18,11 +18,11 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection,const Vecto
 
 	// 引数の内容をメンバ変数に記録
 	model_ = model;
-	//textureHandle_ = textureHandle;
+	// textureHandle_ = textureHandle;
 	viewProjection_ = viewProjection;
 }
 
-void Player::Update(){
+void Player::Update() {
 
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
@@ -54,17 +54,15 @@ void Player::Update(){
 	//-----------8,行列計算----------*
 	// 行列計算
 	worldTransform_.UpdateMatrix();
-
 }
 
-void Player::Draw(){
+void Player::Draw() {
 
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, *viewProjection_);
 }
 
-void Player::MoveInput()
-{
+void Player::MoveInput() {
 	// 移動入力
 	// 接地状態
 	if (onGround_) {
@@ -85,10 +83,9 @@ void Player::MoveInput()
 				if (lrDirection_ != LRDirection::kRight) {
 					lrDirection_ = LRDirection::kRight;
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
-					turnTimer_ = 0.5f;
+					turnTimer_ = kLimitRunSpeed;
 				}
-			}
-			else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+			} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
 
 				// 右移動中の左入力
 				if (velocity_.x > 0.0f) {
@@ -100,7 +97,7 @@ void Player::MoveInput()
 				if (lrDirection_ != LRDirection::kLeft) {
 					lrDirection_ = LRDirection::kLeft;
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
-					turnTimer_ = 0.5f;
+					turnTimer_ = kLimitRunSpeed;
 				}
 			}
 			// 加速/減速
@@ -110,24 +107,27 @@ void Player::MoveInput()
 
 			// 最大速度制限
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
+		} else {
+			velocity_.x *= (1.0f - kAttenuation);
+			velocity_.y *= (1.0f - kAttenuation);
+			velocity_.z *= (1.0f - kAttenuation);
 		}
 		if (Input::GetInstance()->PushKey(DIK_UP)) {
 			// ジャンプ初速
 			velocity_.y += kJumpAcceleration;
+			// 空中
+		}else {
+			// 落下速度
+			velocity_.y -= kGravityAcceleration;
+			// 落下速度制限
+			velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 		}
-		// 空中
-	}
-	else {
-		// 落下速度
-		velocity_.y -= kGravityAcceleration;
-		// 落下速度制限
-		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
 
-	// 移動
-	worldTransform_.translation_.x += velocity_.x;
-	worldTransform_.translation_.y += velocity_.y;
-	worldTransform_.translation_.z += velocity_.z;
+	//// 移動
+	// worldTransform_.translation_.x += velocity_.x;
+	// worldTransform_.translation_.y += velocity_.y;
+	// worldTransform_.translation_.z += velocity_.z;
 
 	// 着地フラグ
 	bool landing = false;
@@ -146,11 +146,11 @@ void Player::MoveInput()
 			// 空中状態の移行
 			onGround_ = false;
 		}
-	}else {
+	} else {
 		// 着地
 		if (landing) {
 			// めり込み排斥
-			worldTransform_.translation_.y = 1.5f;
+			worldTransform_.translation_.y = 1.0f;
 			// 摩擦で横方向速度が減衰する
 			velocity_.x *= (1.0f - kAttenuation);
 			// 下方向速度でリセット
@@ -159,27 +159,24 @@ void Player::MoveInput()
 			onGround_ = true;
 		}
 	}
-
 }
 
-void Player::MapCollision(CollisionMapInfo& info)
-{
+void Player::MapCollision(CollisionMapInfo& info) {
 	MapCollisionUp(info);
 	MapCollisionDown(info);
 	MapCollisionLeft(info);
 	MapCollisionRight(info);
 }
 
-void Player::MapCollisionUp(CollisionMapInfo& info)
-{
+void Player::MapCollisionUp(CollisionMapInfo& info) {
 
 	// 上昇あり？
 	if (info.movement_.y <= 0) {
 		return;
 	}
-	
+
 	// 移動後の4つの角の座標
-	std::array<Vector3, kNumCorner>positonsNew;
+	std::array<Vector3, kNumCorner> positonsNew;
 
 	for (uint32_t i = 0; i < positonsNew.size(); ++i) {
 		positonsNew[i] = CornerPosition(worldTransform_.translation_ + info.movement_, static_cast<Corner>(i));
@@ -214,44 +211,41 @@ void Player::MapCollisionUp(CollisionMapInfo& info)
 	}
 }
 
-void Player::MapCollisionDown(CollisionMapInfo& info)
-{
+void Player::MapCollisionDown(CollisionMapInfo& info) {
 	// 移動後の4つの角の座標
-	std::array<Vector3, kNumCorner>positonsNew;
+	std::array<Vector3, kNumCorner> positonsNew;
 
 	for (uint32_t i = 0; i < positonsNew.size(); ++i) {
 		positonsNew[i] = CornerPosition(worldTransform_.translation_ + info.movement_, static_cast<Corner>(i));
 	}
 }
 
-void Player::MapCollisionLeft(CollisionMapInfo& info)
-{
+void Player::MapCollisionLeft(CollisionMapInfo& info) {
 	// 移動後の4つの角の座標
-	std::array<Vector3, kNumCorner>positonsNew;
+	std::array<Vector3, kNumCorner> positonsNew;
 
 	for (uint32_t i = 0; i < positonsNew.size(); ++i) {
 		positonsNew[i] = CornerPosition(worldTransform_.translation_ + info.movement_, static_cast<Corner>(i));
 	}
 }
 
-void Player::MapCollisionRight(CollisionMapInfo& info)
-{
+void Player::MapCollisionRight(CollisionMapInfo& info) {
 	// 移動後の4つの角の座標
-	std::array<Vector3, kNumCorner>positonsNew;
+	std::array<Vector3, kNumCorner> positonsNew;
 
 	for (uint32_t i = 0; i < positonsNew.size(); ++i) {
 		positonsNew[i] = CornerPosition(worldTransform_.translation_ + info.movement_, static_cast<Corner>(i));
 	}
 }
 
-void Player::JudgmentMove(const CollisionMapInfo& info)
-{
+void Player::JudgmentMove(const CollisionMapInfo& info) {
 	// 移動
-	worldTransform_.translation_ += info.movement_;
+	worldTransform_.translation_.x += info.movement_.x;
+	worldTransform_.translation_.y += info.movement_.y;
+	worldTransform_.translation_.z += info.movement_.z;
 }
 
-void Player::CeilingContact(const CollisionMapInfo& info)
-{
+void Player::CeilingContact(const CollisionMapInfo& info) {
 	// 天井に当たった?
 	if (info.CeilingCollisionFlag) {
 		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
@@ -259,35 +253,27 @@ void Player::CeilingContact(const CollisionMapInfo& info)
 	}
 }
 
-void Player::TurnControll()
-{
+void Player::TurnControll() {
 	// 旋回制御
-	if(turnTimer_>0.0f)
-	{
+	if (turnTimer_ > 0.0f) {
 		turnTimer_ -= 1.0f / 60.0f;
 		// 左右の自キャラ角度テーブル
-		float destinationRotationYTable[] = {
-			std::numbers::pi_v<float> / 2.0f,
-			std::numbers::pi_v<float>*3.0f / 2.0f
-		};
+		float destinationRotationYTable[] = {std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f};
 		// 状態に応じた角度を取得する
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
 		// 自キャラの角度を設定する
 		worldTransform_.rotation_.y = destinationRotationY;
-
 	}
 }
 
-Vector3 Player::CornerPosition(const Vector3& center, Corner corner)
-{
+Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 
 	Vector3 offsetTable[kNumCorner] = {
-		{+kWidth / 2.0f,-kHeight / 2.0f,0}, // kRightBottom
-		{-kWidth / 2.0f,-kHeight / 2.0f,0}, // kLeftBottom
-		{+kWidth / 2.0f,+kHeight / 2.0f,0}, // kRightTop
-		{-kWidth / 2.0f,+kHeight / 2.0f,0}  // kleftTop
+	    {+kWidth / 2.0f, -kHeight / 2.0f, 0}, // kRightBottom
+	    {-kWidth / 2.0f, -kHeight / 2.0f, 0}, // kLeftBottom
+	    {+kWidth / 2.0f, +kHeight / 2.0f, 0}, // kRightTop
+	    {-kWidth / 2.0f, +kHeight / 2.0f, 0}  // kleftTop
 	};
 
 	return center + offsetTable[static_cast<uint32_t>(corner)];
 }
-
