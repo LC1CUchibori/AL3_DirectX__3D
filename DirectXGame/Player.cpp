@@ -114,14 +114,18 @@ void Player::MoveInput() {
 		}
 		if (Input::GetInstance()->PushKey(DIK_UP)) {
 			// ジャンプ初速
+			velocity_.x += 0;
 			velocity_.y += kJumpAcceleration;
+			velocity_.z += 0;
 			// 空中
-		}else {
-			// 落下速度
-			velocity_.y -= kGravityAcceleration;
-			// 落下速度制限
-			velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 		}
+	}else {
+		// 落下速度
+		velocity_.x += 0;
+		velocity_.y += -kGravityAcceleration;
+		velocity_.z += 0;
+		// 落下速度制限
+		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
 
 	//// 移動

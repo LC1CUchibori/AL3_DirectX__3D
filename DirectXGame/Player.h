@@ -117,12 +117,13 @@ private:
 	// 最大落下速度
 	static inline const float kLimitFallSpeed = 1.0f;
 	// ジャンプ初速
-	static inline const float kJumpAcceleration = 0.7f;
+	static inline const float kJumpAcceleration = 0.2f;
 
 
 	MapChipField* mapChipField_ = nullptr;
 	// キャラクターのあたり判定サイズ
 	static inline const float kWidth = 0.8f;
+
 	static inline const float kHeight = 0.8f;
 
 	static inline const float kBlank = 1.0f;
