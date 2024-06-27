@@ -30,15 +30,22 @@ void CameraController::Initialize()
 		viewProjection_.translation_.z = Lerp(viewProjection_.translation_.z, dest_.z, kInterpolationRate);
 
 		// 追従対象が画面外に出ないように補正
-		viewProjection_.translation_.x =
-			max(viewProjection_.translation_.x, targetWorldTransform.translation_.x + margin.left);
-		viewProjection_.translation_.x =
-			min(viewProjection_.translation_.x, targetWorldTransform.translation_.x + margin.right);
-		viewProjection_.translation_.y =
-			max(viewProjection_.translation_.y, targetWorldTransform.translation_.y + margin.bottom);
-		viewProjection_.translation_.y =
-			min(viewProjection_.translation_.y, targetWorldTransform.translation_.y+ margin.top);
+		viewProjection_.translation_.x = std::clamp(viewProjection_.translation_.x, targetWorldTransform.translation_.x + margin.left, targetWorldTransform.translation_.x + margin.right);
+		viewProjection_.translation_.y = std::clamp(viewProjection_.translation_.y, targetWorldTransform.translation_.y + margin.bottom, targetWorldTransform.translation_.y + margin.top);
+		// 移動範囲制限
+		viewProjection_.translation_.x = std::clamp(viewProjection_.translation_.x, movableArea_.left, movableArea_.right);
+		viewProjection_.translation_.y = std::clamp(viewProjection_.translation_.y, movableArea_.bottom, movableArea_.top);
 
+		/*
+		viewProjection_.translation_.x =
+		max(viewProjection_.translation_.x, targetWorldTransform.translation_.x + margin.left);
+		viewProjection_.translation_.x =
+		min(viewProjection_.translation_.x, targetWorldTransform.translation_.x + margin.right);
+		viewProjection_.translation_.y =
+		max(viewProjection_.translation_.y, targetWorldTransform.translation_.y + margin.bottom);
+		viewProjection_.translation_.y =
+		min(viewProjection_.translation_.y, targetWorldTransform.translation_.y+ margin.top);
+		*/
 		// 移動範囲制限
 		viewProjection_.translation_.x = std::clamp(viewProjection_.translation_.x, movableArea_.left, movableArea_.right);
 		viewProjection_.translation_.y = std::clamp(viewProjection_.translation_.y, movableArea_.bottom, movableArea_.top);
