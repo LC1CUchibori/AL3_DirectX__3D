@@ -35,7 +35,7 @@ void GameScene::Initialize() {
 	//textureHandle_ = TextureManager::Load("uvChecker.png");
 	// 3Dモデルの生成
 	model_ = Model::Create();
-	modelBlock_ = Model::Create();
+	modelBlock_ = Model::CreateFromOBJ("block", true);
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -207,7 +207,7 @@ void GameScene::Draw() {
 			if (!worldTransformBlockYoko)
 				continue;
 
-			model_->Draw(*worldTransformBlockYoko, viewProjection_);
+			modelBlock_->Draw(*worldTransformBlockYoko, viewProjection_);
 		}
 	}
 

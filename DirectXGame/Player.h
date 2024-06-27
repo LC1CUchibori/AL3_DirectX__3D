@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "DebugText.h"
 
 /// <summary>
 /// 自キャラ
@@ -40,7 +41,7 @@ public:
 
 	Vector3& GetVelocity() {return velocity_; }
 
-	void SetMapChipField(MapChipField* mapChipField) { MapChipField* mapChipField_; }
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
 	void MoveInput();
 
@@ -62,6 +63,12 @@ public:
 	void MapCollisionLeft(CollisionMapInfo& info);
 
 	void MapCollisionRight(CollisionMapInfo& info);
+
+	void JudgmentMove(const CollisionMapInfo& info);
+
+	void CeilingContact(const CollisionMapInfo& info);
+
+	void TurnControll();
 
 	// 左右
 	enum class LRDirection {
@@ -99,31 +106,33 @@ private:
 
 	MapChipField* mapChipField_ = nullptr;
 
-	static inline const float kAcceleration = 0.03f;
-	static inline const float kLimitRunSpeed = 0.6f;
-	static inline const float kAttenuation = 0.03f;
+	static inline const float kAcceleration = 0.01f;
+	static inline const float kLimitRunSpeed = 1.0f;
+	static inline const float kAttenuation = 0.2f;
 
 	// 旋回開始時の角度
 	float turnFirstRotationY_ = 0.0f;
 	// 旋回タイマー
 	float turnTimer_ = 0.0f;
 	// 旋回時間<秒>
-	static inline const float kTimeTurn = 0.0f;
+	static inline const float kTimeTurn = 0.5f;
 
 	// 接地状態フラグ
 	bool onGround_ = true;
 
 	// 重力加速度
-	static inline const float kGravityAcceleration = 0.1f;
+	static inline const float kGravityAcceleration = 0.05f;
 	// 最大落下速度
-	static inline const float kLimitFallSpeed = 0.3f;
+	static inline const float kLimitFallSpeed = 1.0f;
 	// ジャンプ初速
-	static inline const float kJumpAcceleration = 0.6f;
+	static inline const float kJumpAcceleration = 0.7f;
 
 	const WorldTransform& GetWorldTransform()const { return worldTransform_; }
 
 	// キャラクターのあたり判定サイズ
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
+
+	static inline const float kBlank = 1.0f;
 };
 

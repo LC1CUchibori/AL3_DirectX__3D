@@ -27,73 +27,40 @@ void Player::Update(){
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
 
-	// 1,移動入力
+	//*--------- 1,移動入力------------*/
+	MoveInput();
 
+	//*----------2,移動量を加味して衝突判定する------------*
 	// 衝突情報を初期化
 	CollisionMapInfo collisionMapInfo;
 	// 移動量に速度の値をコピー
 	collisionMapInfo.movement_ = velocity_;
-
 	// マップ衝突チェック
 	MapCollision(collisionMapInfo);
 
+	//*----------3,判定結果を反映して移動させる------------*
+	JudgmentMove(collisionMapInfo);
 
+	//*----------4,天井に接触している場合の処理------------*
+	CeilingContact(collisionMapInfo);
 
+	//*----------5,壁に接触している場合の処理-----------*
+
+	//*----------6,接地状態の切り替え-----------*
+
+	//*----------7,旋回制御-----------*
+	TurnControll();
+
+	//-----------8,行列計算----------*
 	// 行列計算
 	worldTransform_.UpdateMatrix();
 
-	// 旋回制御
-	if(turnTimer_>0.0f)
-	{
-		turnTimer_ -= 1.0f / 60.0f;
-		// 左右の自キャラ角度テーブル
-		float destinationRotationYTable[] = {
-			std::numbers::pi_v<float> / 2.0f,
-			std::numbers::pi_v<float>*3.0f / 2.0f
-		};
-		// 状態に応じた角度を取得する
-		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-		// 自キャラの角度を設定する
-		worldTransform_.rotation_.y = destinationRotationY;
-
-	}
-
-	// 着地フラグ
-	bool landing = false;
-
-	// 地面とのあたり判定
-	if (velocity_.y < 0) {
-		if (worldTransform_.translation_.y <= 1.0f) {
-			landing = true;
-		}
-	}
-
-	// 接地判定
-	if (onGround_) {
-		// ジャンプ開始
-		if (velocity_.y > 0.0f) {
-			// 空中状態の移行
-			onGround_ = false;
-		}
-	}else {
-		// 着地
-		if (landing) {
-			// めり込み排斥
-			worldTransform_.translation_.y = 1.5f;
-			// 摩擦で横方向速度が減衰する
-			velocity_.x *= (1.0f - kAttenuation);
-			// 下方向速度でリセット
-			velocity_.y = 0.0f;
-			// 接地状態に移行
-			onGround_ = true;
-		}
-	}
 }
 
 void Player::Draw(){
 
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
+	model_->Draw(worldTransform_, *viewProjection_);
 }
 
 void Player::MoveInput()
@@ -162,6 +129,37 @@ void Player::MoveInput()
 	worldTransform_.translation_.y += velocity_.y;
 	worldTransform_.translation_.z += velocity_.z;
 
+	// 着地フラグ
+	bool landing = false;
+
+	// 地面とのあたり判定
+	if (velocity_.y < 0) {
+		if (worldTransform_.translation_.y <= 1.0f) {
+			landing = true;
+		}
+	}
+
+	// 接地判定
+	if (onGround_) {
+		// ジャンプ開始
+		if (velocity_.y > 0.0f) {
+			// 空中状態の移行
+			onGround_ = false;
+		}
+	}else {
+		// 着地
+		if (landing) {
+			// めり込み排斥
+			worldTransform_.translation_.y = 1.5f;
+			// 摩擦で横方向速度が減衰する
+			velocity_.x *= (1.0f - kAttenuation);
+			// 下方向速度でリセット
+			velocity_.y = 0.0f;
+			// 接地状態に移行
+			onGround_ = true;
+		}
+	}
+
 }
 
 void Player::MapCollision(CollisionMapInfo& info)
@@ -191,7 +189,29 @@ void Player::MapCollisionUp(CollisionMapInfo& info)
 	// 真上のあたり判定を行う
 	bool hit = false;
 	// 左上点の判定
-	MapChipField::IndexSet indexSet
+	MapChipField::IndexSet indexSet;
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positonsNew[kLeftTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::lBlock) {
+		hit = true;
+	}
+	// 右上点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positonsNew[kRightTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::lBlock) {
+		hit = true;
+	}
+
+	// ブロックにヒット?
+	if (hit) {
+		// めり込みを排除する方向に移動量を設定する
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(0, +kHeight / 2.0f, 0));
+		// めり込み先ブロックの範囲矩形
+		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		info.movement_.y = std::max(0.0f, rect.bottom - worldTransform_.translation_.y - (kHeight / 2.0f + kBlank));
+		// 天井に当たったことを記録する
+		info.CeilingCollisionFlag = true;
+	}
 }
 
 void Player::MapCollisionDown(CollisionMapInfo& info)
@@ -224,20 +244,42 @@ void Player::MapCollisionRight(CollisionMapInfo& info)
 	}
 }
 
+void Player::JudgmentMove(const CollisionMapInfo& info)
+{
+	// 移動
+	worldTransform_.translation_ += info.movement_;
+}
+
+void Player::CeilingContact(const CollisionMapInfo& info)
+{
+	// 天井に当たった?
+	if (info.CeilingCollisionFlag) {
+		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
+		velocity_.y = 0;
+	}
+}
+
+void Player::TurnControll()
+{
+	// 旋回制御
+	if(turnTimer_>0.0f)
+	{
+		turnTimer_ -= 1.0f / 60.0f;
+		// 左右の自キャラ角度テーブル
+		float destinationRotationYTable[] = {
+			std::numbers::pi_v<float> / 2.0f,
+			std::numbers::pi_v<float>*3.0f / 2.0f
+		};
+		// 状態に応じた角度を取得する
+		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
+		// 自キャラの角度を設定する
+		worldTransform_.rotation_.y = destinationRotationY;
+
+	}
+}
+
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner)
 {
-	/*if (corner == kRightBottom) {
-		return center + {+kWidth / 2.0f, -kHeight / 2.0f, 0};
-	}
-	else if (corner == kLeftBottom) {
-		return center + {-kWidth / 2.0f, -kHeight / 2.0f, 0};
-	}
-	else if (corner == kRightTop) {
-		return center + {+kWidth / 2.0f, +kHeight / 2.0f, 0};
-	}
-	else{
-		return center + {-kWidth / 2.0f, +kHeight / 2.0f, 0};
-	}*/
 
 	Vector3 offsetTable[kNumCorner] = {
 		{+kWidth / 2.0f,-kHeight / 2.0f,0}, // kRightBottom

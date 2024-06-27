@@ -29,10 +29,12 @@ public:
 
 	void SetMovableArea(const Rect& area)
 	{
-		movableArea_ .left= area.left; 
-		movableArea_.right = area.right;
-		movableArea_.bottom = area.bottom;
-		movableArea_.top = area.top;
+		movableArea_ = area; 
+
+		//		movableArea_.left= area.left; 
+		//		movableArea_.right = area.right;
+		//		movableArea_.bottom = area.bottom;
+		//		movableArea_.top = area.top;
 	}
 
 	ViewProjection GetViewPosition();
@@ -48,17 +50,20 @@ private:
 	// 追従対象とカメラの座標の差（オフセット）
 	Vector3 targetOffset_{ 0,0,-15.0f };
 
+	Vector3 destination_;
+
 	Vector3 dest_{ 0,0,-15.0f };
 
+	// カメラ移動範囲
+	Rect movableArea_ = {15, 100, 8, 100};
+
+	// 追従対象の各方向へのカメラ移動範囲
+	static inline const Rect margin = {-9.0f, 9.0f, -5.0f, 5.0f};
+
 	// 座標補間割合
-	static inline const float kInterpolationRate = 1.0f;
+	static inline const float kInterpolationRate = 0.1f;
 
 	// 速度掛率
 	static inline const float kVelocityBias = 15.0f;
 
-	// カメラ移動範囲
-	Rect movableArea_ = { 0,100,0,100 };
-
-	// 追従対象の各方向へのカメラ移動範囲
-	static inline const Rect margin = {-25.0f, 25.0f, -50.0f, 50.0f};
 };
