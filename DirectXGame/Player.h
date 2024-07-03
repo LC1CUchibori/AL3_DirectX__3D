@@ -70,6 +70,8 @@ public:
 
 	void TurnControll();
 
+	void SwitchGrandState(const CollisionMapInfo& info);
+
 	// 左右
 	enum class LRDirection {
 		kRight,
@@ -118,6 +120,8 @@ private:
 	static inline const float kLimitFallSpeed = 1.0f;
 	// ジャンプ初速
 	static inline const float kJumpAcceleration = 0.5f;
+
+	static inline const float kAttenuationLanding = 0.2f;
 
 
 	MapChipField* mapChipField_ = nullptr;
