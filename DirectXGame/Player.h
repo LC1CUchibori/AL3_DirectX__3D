@@ -121,7 +121,7 @@ private:
 	// ジャンプ初速
 	static inline const float kJumpAcceleration = 0.5f;
 
-	static inline const float kAttenuationLanding = 0.2f;
+	static inline const float kAttenuationLanding = 0.5f;
 
 
 	MapChipField* mapChipField_ = nullptr;
@@ -130,6 +130,6 @@ private:
 
 	static inline const float kHeight = 0.8f;
 
-	static inline const float kBlank = 1.0f;
+	static inline const float kBlank = 18.0f;
 };
 
