@@ -23,6 +23,10 @@ GameScene::~GameScene() {
 	delete mapChipField_;
 
 	delete modelPlayer_;
+
+	delete modelEnemy_;
+
+	delete enemy_;
 }
 
 void GameScene::Initialize() {
@@ -43,6 +47,8 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 17);
+
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(8, 17);
 
 	// マップチップフィールドの生成
 	mapChipField_ = new MapChipField;
@@ -78,7 +84,10 @@ void GameScene::Initialize() {
 	CameraController::Rect movableArea_ = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovableArea(movableArea_);
 
-
+	enemy_ = new Enemy();
+	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
+	enemy_->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
+	
 
 	// 要素数
 	/*const uint32_t kNumBlockVirtical = 10;
@@ -147,6 +156,9 @@ void GameScene::Update() {
 	// カメラコントローラの更新
 	cameraController_->Update();
 
+	if (!NULL) {
+		enemy_->Updata();
+	};
 
 	// 縦横ブロック更新
 	for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
@@ -200,6 +212,9 @@ void GameScene::Draw() {
 	// 天球の描画
 	skydome_->Draw();
 
+	if (!NULL) {
+		enemy_->Draw();
+	}
 
 	//縦横ブロック描画
     for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
