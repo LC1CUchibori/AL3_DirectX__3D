@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include "myMath.h"
 #include <cassert>
+#include "AABB.h"
 
 GameScene::GameScene() {}
 
@@ -187,6 +188,9 @@ void GameScene::Update() {
 			worldTransformBlockYoko->TransferMatrix();
 		}
 	}
+
+	// 全てのあたり判定を行う
+	CheckAllCollisions();
 }
 
 
@@ -281,4 +285,32 @@ void GameScene::GenerateBlcoks()
 			}
 		}
 	}
+}
+
+void GameScene::CheckAllCollisions()
+{
+	{
+#pragma region 自キャラと敵キャラの当たり判定
+	
+		// 判定対象1と2の座標
+		AABB aabb1, aabb2;
+		
+
+		// 自キャラの座標
+		aabb1 = player_->GetAABB();
+		for (Enemy* enemy : enemies_) {
+			// 敵弾の座標
+			aabb2 = enemy->GetAABB();
+
+			// AABB同士の交差判定(
+			if (IsCollision(aabb1, aabb2)) {
+				// 自キャラの衝突判定コールバックを呼び出す
+				player_->OnCollision(enemy);
+				// 敵弾の衝突判定コールバックを呼び出す
+					enemy->OnCollision(player_);
+			}
+		}
+	}
+#pragma endregion
+
 }

@@ -2,12 +2,15 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "DebugText.h"
+#include "AABB.h"
 
 /// <summary>
 /// 自キャラ
 /// </summary>
 
 class MapChipField;
+
+class Player;
 
 class Enemy {
 public:
@@ -18,6 +21,25 @@ public:
 	void Draw();
 
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
+
+	
+
+	// AABBを取得
+	AABB GetAABB();
+
+	float x, y, z;
+
+	// += 演算子のオーバーロード
+	Vector3& operator+=(const Vector3& other) {
+		this->x += other.x;
+		this->y += other.y;
+		this->z += other.z;
+	}
+
+	void OnCollision(const Player* player);
 
 private:
     // ワールドトランスフォーム
@@ -42,4 +64,8 @@ private:
 	static inline const float kWalkMotionTime = 5.0f;
 	// 経過時間
 	float walkTimer_ = 0.0f;
+
+	static inline const float kWidth = 0.8f;
+
+	static inline const float kHeight = 0.8f;
 };

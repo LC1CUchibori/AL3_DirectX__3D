@@ -4,12 +4,15 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "DebugText.h"
+#include"AABB.h"
 
 /// <summary>
 /// 自キャラ
 /// </summary>
 
 class MapChipField;
+
+class Enemy;
 
 class Player {
 public:
@@ -90,6 +93,16 @@ public:
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
+
+
+	// AABBを取得
+	AABB GetAABB();
+
+	void OnCollision(const Enemy* enemy);
+
+
 
 private:
 
@@ -131,5 +144,7 @@ private:
 	static inline const float kHeight = 0.8f;
 
 	static inline const float kBlank = 18.0f;
+
+	static inline const float firstSpeed = 1.0f;
 };
 

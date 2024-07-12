@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目", "ソリューション項目", "{F575E57D-C49F-45E4-B4B9-AFACBE01A2A4}"
 	ProjectSection(SolutionItems) = preProject
 		Enemy.cpp = Enemy.cpp
+		AABB.h = AABB.h
 	EndProjectSection
 EndProject
 Global

@@ -13,6 +13,7 @@
 #include "mapChipField.h"
 #include "CameraController.h"
 #include "Enemy.h"
+#include "AABB.h"
 
 #include <vector>
 
@@ -51,6 +52,18 @@ public: // メンバ関数
 
 
 	void GenerateBlcoks();
+
+	// 全てのあたり判定を行う
+	void CheckAllCollisions();
+
+
+	// AABB同士の交差判定
+	bool IsCollision(const AABB& a, const AABB& b) {
+		// 重なっているかどうかを判定する条件式
+		return (a.min.x <= b.max.x && a.max.x >= b.min.x) &&
+			(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
+			(a.min.z <= b.max.z && a.max.z >= b.min.z);
+	}
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
