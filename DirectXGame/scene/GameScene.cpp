@@ -46,9 +46,9 @@ void GameScene::Initialize() {
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 17);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(8, 17);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(9, 18);
 
 	// マップチップフィールドの生成
 	mapChipField_ = new MapChipField;
