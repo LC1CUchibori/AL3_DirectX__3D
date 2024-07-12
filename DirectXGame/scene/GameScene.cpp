@@ -26,7 +26,10 @@ GameScene::~GameScene() {
 
 	delete modelEnemy_;
 
-	delete enemy_;
+	for (Enemy* enemy : enemies_) {
+		delete enemy;
+	}
+	enemies_.clear();
 }
 
 void GameScene::Initialize() {
@@ -84,10 +87,18 @@ void GameScene::Initialize() {
 	CameraController::Rect movableArea_ = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovableArea(movableArea_);
 
-	enemy_ = new Enemy();
-	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
-	enemy_->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
-	
+	for (int32_t i= 0; i < 3; ++i) {
+		Enemy*newEnemy = new Enemy();
+		std::vector<Vector3> enemyPositions = {
+		{8.0f, 2.0f, 0.0f},
+		{8.0f, 4.0f, 0.0f},
+		{8.0f, 6.0f, 0.0f}
+		};
+		modelEnemy_ = Model::CreateFromOBJ("enemy", true);
+		newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPositions[i]);
+
+		enemies_.push_back(newEnemy);
+	}
 
 	// 要素数
 	/*const uint32_t kNumBlockVirtical = 10;
@@ -156,9 +167,10 @@ void GameScene::Update() {
 	// カメラコントローラの更新
 	cameraController_->Update();
 
-	if (!NULL) {
-		enemy_->Updata();
-	};
+	// 敵の更新
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
 
 	// 縦横ブロック更新
 	for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
@@ -206,14 +218,16 @@ void GameScene::Draw() {
 	/// </summary>
 	// 3Dモデル描画
 	//	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	
 	// 自キャラの描画
 	player_->Draw();
 
 	// 天球の描画
 	skydome_->Draw();
 
-	if (!NULL) {
-		enemy_->Draw();
+	// 敵の描画
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw();
 	}
 
 	//縦横ブロック描画

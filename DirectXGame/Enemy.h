@@ -13,7 +13,7 @@ class Enemy {
 public:
 	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position);
 
-	void Updata();
+	void Update();
 
 	void Draw();
 

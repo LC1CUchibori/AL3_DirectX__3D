@@ -18,7 +18,7 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 	walkTimer_ = 0.0f;
 }
 
-void Enemy::Updata()
+void Enemy::Update()
 {
 	// 移動
 	worldTransform_.translation_ += velocity_;
