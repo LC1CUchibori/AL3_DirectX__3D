@@ -1,4 +1,4 @@
-#include "Audio.h"
+
 #include "AxisIndicator.h"
 #include "DirectXCommon.h"
 #include "GameScene.h"
@@ -13,7 +13,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	DirectXCommon* dxCommon = nullptr;
 	// 汎用機能
 	Input* input = nullptr;
-	Audio* audio = nullptr;
 	AxisIndicator* axisIndicator = nullptr;
 	PrimitiveDrawer* primitiveDrawer = nullptr;
 	GameScene* gameScene = nullptr;
@@ -35,9 +34,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	input = Input::GetInstance();
 	input->Initialize();
 
-	// オーディオの初期化
-	audio = Audio::GetInstance();
-	audio->Initialize();
 
 	// テクスチャマネージャの初期化
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice());
@@ -97,7 +93,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete gameScene;
 	// 3Dモデル解放
 	Model::StaticFinalize();
-	audio->Finalize();
 	// ImGui解放
 	imguiManager->Finalize();
 

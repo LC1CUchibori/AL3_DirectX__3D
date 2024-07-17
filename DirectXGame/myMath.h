@@ -1,4 +1,6 @@
-#include"GameScene.h"
+//#include"GameScene.h"
+#include"Matrix4x4.h"
+#include"Vector3.h"
 
 // アフィン変換行列の作成
 Matrix4x4 MakeAffineMatrix(const Vector3& scale_, const Vector3& rotation_, const Vector3& translation_);

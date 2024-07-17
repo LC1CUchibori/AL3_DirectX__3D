@@ -2,7 +2,6 @@
 #include "TextureManager.h"
 #include "myMath.h"
 #include <cassert>
-#include "AABB.h"
 
 GameScene::GameScene() {}
 
@@ -27,6 +26,9 @@ GameScene::~GameScene() {
 
 	delete modelEnemy_;
 
+	delete modelDeathParticlse_;
+
+
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
@@ -37,7 +39,6 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	audio_ = Audio::GetInstance();
 
 	// ファイル名を指定してテクスチャを読み込む
 	//textureHandle_ = TextureManager::Load("uvChecker.png");
@@ -100,6 +101,9 @@ void GameScene::Initialize() {
 
 		enemies_.push_back(newEnemy);
 	}
+
+	deathParticles_ = new DeathParticles;
+	deathParticles_->Initialize(modelDeathParticlse_, &viewProjection_, playerPosition);
 
 	// 要素数
 	/*const uint32_t kNumBlockVirtical = 10;
@@ -189,6 +193,10 @@ void GameScene::Update() {
 		}
 	}
 
+	if (deathParticles_) {
+		deathParticles_->Update();
+	}
+
 	// 全てのあたり判定を行う
 	CheckAllCollisions();
 }
@@ -260,6 +268,10 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+
+	if (deathParticles_) {
+		deathParticles_->Draw(viewProjection_);
+	}
 }
 
 void GameScene::GenerateBlcoks()

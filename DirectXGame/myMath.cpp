@@ -1,6 +1,7 @@
 #include "myMath.h"
 #include <Matrix4x4.h>
 #include <Vector3.h>
+#include <cmath>
 
 // アフィン変換行列の作成
 Matrix4x4 MakeAffineMatrix(const Vector3& scale_, const Vector3& rotation_, const Vector3& translation_){

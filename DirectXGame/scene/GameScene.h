@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
@@ -14,8 +13,9 @@
 #include "CameraController.h"
 #include "Enemy.h"
 #include "AABB.h"
-
+#include "DeathParticles.h"
 #include <vector>
+
 
 
 
@@ -68,7 +68,6 @@ public: // メンバ関数
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
-	Audio* audio_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用
@@ -80,6 +79,7 @@ private: // メンバ変数
 	Model* modelBlock_ = nullptr;
 	Model* modelPlayer_ = nullptr;
 	Model* modelEnemy_ = nullptr;
+	Model* modelDeathParticlse_ = nullptr;
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
 	// ビュープロジェクション
@@ -107,4 +107,6 @@ private: // メンバ変数
 	CameraController* cameraController_=nullptr;
 
 	std::list<Enemy*>enemies_;
+
+	DeathParticles* deathParticles_ = nullptr;
 };
