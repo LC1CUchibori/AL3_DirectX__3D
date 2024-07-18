@@ -26,7 +26,8 @@ GameScene::~GameScene() {
 
 	delete modelEnemy_;
 
-	delete modelDeathParticlse_;
+	delete deathParticles_;
+
 
 
 	for (Enemy* enemy : enemies_) {
@@ -102,7 +103,9 @@ void GameScene::Initialize() {
 		enemies_.push_back(newEnemy);
 	}
 
-	deathParticles_ = new DeathParticles;
+	modelDeathParticlse_ = Model::CreateFromOBJ("deathParticle", true);
+
+	deathParticles_ = new DeathParticles();
 	deathParticles_->Initialize(modelDeathParticlse_, &viewProjection_, playerPosition);
 
 	// 要素数
@@ -252,6 +255,11 @@ void GameScene::Draw() {
 		}
 	}
 
+	if (deathParticles_) {
+		deathParticles_->Draw(viewProjection_);
+	}
+
+
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
@@ -269,9 +277,6 @@ void GameScene::Draw() {
 
 #pragma endregion
 
-	if (deathParticles_) {
-		deathParticles_->Draw(viewProjection_);
-	}
 }
 
 void GameScene::GenerateBlcoks()

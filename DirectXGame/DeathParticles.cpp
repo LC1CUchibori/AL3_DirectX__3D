@@ -16,22 +16,48 @@ void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection, co
 void DeathParticles::Update()
 {
 	// ワールド変換の更新
-	for (auto& worldTransform : worldTransforms_) {
-		// アフィン変換行列を計算
-		worldTransform.matWorld_ = 
-			Matrix4::Scaling(worldTransform.scale_) *
-			Matrix4::Rotation(worldTransform.rotation_) *
-			Matrix4::Translation(worldTransform.translation_);
-		// VRAMに転送 (仮の関数として TransferToVRAM を使用)
-		TransferToVRAM(worldTransform.matWorld_);
+	for (auto& worldTransform : worldTransform_) {
+		// スケール、回転、平行移動を反映してワールド行列を計算
+		worldTransform.UpdateMatrix();
+	}
+
+	for (uint32_t i = 0; i < 8; ++i) {
+		// 基本となるベクトル
+		Vector3 velocity = { kSpeed,0,0 };
+		// 回転角を計算する
+		float angle = kAngleUint * i;
+		// Z軸まわり回転行列
+		Matrix4x4 matrixRotation = MakeRotateZMatrix(angle);
+		// 基本ベクトルを回転させて速度ベクトルを得る
+		velocity = Transform(velocity, matrixRotation);
+		// 移動処理
+		worldTransforms_[i].translation_ += velocity;
+	}
+
+	// カウンターを1フレーム分の秒数進める
+	counter_ += 1.0f / 60.0f;
+	// 存続時間の上限に達したら
+	if (counter_ >= kDuration) {
+		counter_ = kDuration;
+		// 終了扱いにする
+		isFinished_ = true;
+	}
+
+	// 終了ならなにもしない
+	if (isFinished_) {
+		return;
 	}
 }
 
 void DeathParticles::Draw(const ViewProjection& viewProjection)
 {
 	// モデルの描画
-	for (auto& worldTransform : worldTransforms_) {
-		// モデルの描画 (仮の関数として DrawModel を使用)
-		DrawModel(model_, worldTransform.matWorld_, viewProjection_);
+	for (const auto& worldTransform : worldTransform_) {
+		model_->Draw(worldTransform, viewProjection);
+	}
+
+	// 終了ならなにもしない
+	if (isFinished_) {
+		return;
 	}
 }
