@@ -23,7 +23,7 @@ void DeathParticles::Update()
 
 	for (uint32_t i = 0; i < 8; ++i) {
 		// 基本となるベクトル
-		Vector3 velocity = { kSpeed,0,0 };
+		Vector3 velocity = { kSpeed,0.0f,0.0f };
 		// 回転角を計算する
 		float angle = kAngleUint * i;
 		// Z軸まわり回転行列
