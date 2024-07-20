@@ -35,9 +35,9 @@ private:
 	// 存続時間(消滅までの時間)<秒>
 	static inline const float kDuration = 3.0f;
 	// 移動の速さ
-	static inline const float kSpeed = 3.0f;
+	static inline const float kSpeed = 1.0f;
 	// 分割した1個分の角度
-	static inline const float kAngleUint = 2 * 3.14f / 8.0f;
+	static inline const float kAngleUint = 2.0f * 3.14f / 8.0f;
 
 	// 終了フラグ
 	bool isFinished_ = false;

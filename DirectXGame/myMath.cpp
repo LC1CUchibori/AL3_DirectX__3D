@@ -113,9 +113,10 @@ Matrix4x4 MatrixMultiply(Matrix4x4& m1, Matrix4x4& m2) {
 
 // 座標変換
 Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
-	Vector3 result{};
+	Vector3 result;
 	result.x = matrix.m[0][0] * vector.x + matrix.m[0][1] * vector.y + matrix.m[0][2] * vector.z + matrix.m[0][3];
 	result.y = matrix.m[1][0] * vector.x + matrix.m[1][1] * vector.y + matrix.m[1][2] * vector.z + matrix.m[1][3];
 	result.z = matrix.m[2][0] * vector.x + matrix.m[2][1] * vector.y + matrix.m[2][2] * vector.z + matrix.m[2][3];
+
 	return result;
 }
