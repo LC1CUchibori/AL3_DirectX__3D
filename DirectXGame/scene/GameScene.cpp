@@ -256,7 +256,7 @@ void GameScene::Draw() {
 	}
 
 	if (deathParticles_) {
-		deathParticles_->Draw(viewProjection_);
+		deathParticles_->Draw();
 	}
 
 

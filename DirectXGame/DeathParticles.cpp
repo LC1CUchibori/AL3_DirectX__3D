@@ -1,4 +1,5 @@
 #include "DeathParticles.h"
+#include <algorithm>
 
 void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position)
 {
@@ -6,6 +7,10 @@ void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection, co
 	model_ = model;
 	// ビュープロジェクションを初期化
 	viewProjection_ = viewProjection;
+
+	objectColor_.Initialize();
+	color_ = { 1,1,1,1 };
+
 	// ワールド変換の初期化
 	for (auto& worldTransform : worldTransform_) {
 		worldTransform.Initialize();
@@ -37,6 +42,12 @@ void DeathParticles::Update()
 		worldTransform_[i].translation_ += velocity;
 	}
 
+	color_.w = max(0.0f, 1.0f - counter_ / kDuration);
+	// 色変更オブジェクトに色の数値を設定する
+	objectColor_.SetColor(color_);
+	// 色変更オブジェクトをVRAMに転送
+	objectColor_.TransferMatrix();
+
 	// ワールド変換の更新
 	for (auto& worldTransform : worldTransform_) {
 		// スケール、回転、平行移動を反映してワールド行列を計算
@@ -50,11 +61,11 @@ void DeathParticles::Update()
 	}
 }
 
-void DeathParticles::Draw(const ViewProjection& viewProjection)
+void DeathParticles::Draw()
 {
 	// モデルの描画
 	for (const auto& worldTransform : worldTransform_) {
-		model_->Draw(worldTransform, viewProjection);
+		model_->Draw(worldTransform, *viewProjection_,&objectColor_);
 	}
 
 	// 終了ならなにもしない
