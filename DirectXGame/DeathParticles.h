@@ -25,7 +25,7 @@ private:
 	// ビュープロジェクションのポインタ
 	ViewProjection* viewProjection_ = nullptr;
 
-	WorldTransform* worldTransforms_ = nullptr;
+	//WorldTransform* worldTransforms_ = nullptr;
 
 	// パーティクルの個数
 	static inline const uint32_t kNumParticles = 8;
@@ -33,11 +33,11 @@ private:
 	std::array<WorldTransform, kNumParticles>worldTransform_;
 
 	// 存続時間(消滅までの時間)<秒>
-	static inline const float kDuration = 3.0f;
+	static inline const float kDuration = 2.0f;
 	// 移動の速さ
-	static inline const float kSpeed = 1.0f;
+	static inline const float kSpeed = 0.05f;
 	// 分割した1個分の角度
-	static inline const float kAngleUint = 2.0f * 3.14f / 8.0f;
+	static inline const float kAngleUint = 2.0f * 3.14f / kNumParticles;
 
 	// 終了フラグ
 	bool isFinished_ = false;

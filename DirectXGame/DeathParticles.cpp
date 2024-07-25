@@ -15,10 +15,13 @@ void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection, co
 
 void DeathParticles::Update()
 {
-	// ワールド変換の更新
-	for (auto& worldTransform : worldTransform_) {
-		// スケール、回転、平行移動を反映してワールド行列を計算
-		worldTransform.UpdateMatrix();
+	//カウンターを1フレーム分の秒数進める
+	counter_ += 1.0f / 60.0f;
+	// 存続時間の上限に達したら
+	if (counter_ >= kDuration) {
+		counter_ = kDuration;
+		// 終了扱いにする
+		isFinished_ = true;
 	}
 
 	for (uint32_t i = 0; i < 8; ++i) {
@@ -31,17 +34,15 @@ void DeathParticles::Update()
 		// 基本ベクトルを回転させて速度ベクトルを得る
 		velocity = Transform(velocity, matrixRotation);
 		// 移動処理
-		worldTransforms_[i].translation_ += velocity;
+		worldTransform_[i].translation_ += velocity;
 	}
 
-	 //カウンターを1フレーム分の秒数進める
-	counter_ += 1.0f / 60.0f;
-	// 存続時間の上限に達したら
-	if (counter_ >= kDuration) {
-		counter_ = kDuration;
-		// 終了扱いにする
-		isFinished_ = true;
+	// ワールド変換の更新
+	for (auto& worldTransform : worldTransform_) {
+		// スケール、回転、平行移動を反映してワールド行列を計算
+		worldTransform.UpdateMatrix();
 	}
+
 
 	// 終了ならなにもしない
 	if (isFinished_) {
