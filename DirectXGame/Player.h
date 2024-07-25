@@ -103,8 +103,12 @@ public:
 	void OnCollision(const Enemy* enemy);
 
 
+	// デスフラグのGetter
+	bool IsDead()const { return isDead_; }
 
 private:
+	// デスフラグ
+	bool  isDead_ = false;
 
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -146,5 +150,7 @@ private:
 	static inline const float kBlank = 18.0f;
 
 	static inline const float firstSpeed = 1.0f;
+
+
 };
 

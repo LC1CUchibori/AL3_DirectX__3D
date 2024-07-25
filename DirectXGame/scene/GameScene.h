@@ -51,14 +51,21 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-
 	void GenerateBlcoks();
 
+	/// <summary>
 	// 全てのあたり判定を行う
+	/// </summary>
 	void CheckAllCollisions();
 
+	/// <summary>
+	/// フェーズの切り替え
+	/// </summary>
+	void ChangePhase();
 
+	/// <summary>
 	// AABB同士の交差判定
+	/// </summary>
 	bool IsCollision(const AABB& a, const AABB& b) {
 		// 重なっているかどうかを判定する条件式
 		return (a.min.x <= b.max.x && a.max.x >= b.min.x) &&
@@ -110,4 +117,13 @@ private: // メンバ変数
 	std::list<Enemy*>enemies_;
 
 	DeathParticles* deathParticles_ = nullptr;
+
+	// ゲームのフェーズ(型)
+	enum class Phase{
+		kPlay,   // ゲームプレイ
+		kDeath,  // デス演出
+	};
+
+	// ゲームの現在フェーズ(変数)
+	Phase phase_;
 };

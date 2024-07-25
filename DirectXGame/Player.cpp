@@ -425,5 +425,6 @@ void Player::OnCollision(const Enemy* enemy)
 {
 	(void)enemy;
 	// ジャンプ開始
-	velocity_ += Vector3(firstSpeed);
+	//velocity_ += Vector3(firstSpeed);
+	isDead_ = true;
 }
