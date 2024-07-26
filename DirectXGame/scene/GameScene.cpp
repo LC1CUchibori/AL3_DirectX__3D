@@ -112,7 +112,7 @@ void GameScene::Update() {
 	ChangePhase();
 
 	switch (phase_){
-	case GameScene::Phase::kPlay:
+	case Phase::kPlay:
 
 		// 自キャラの更新
 		player_->Update();
@@ -160,12 +160,19 @@ void GameScene::Update() {
 			viewProjection_.TransferMatrix();
 		}
 
-
+		#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_SPACE)) {
+		if (isDebugCameraActive_ == true)
+			isDebugCameraActive_ = false;
+		else
+			isDebugCameraActive_ = true;
+	}
+#endif
 
 		// 全てのあたり判定を行う
 		CheckAllCollisions();
 		break;
-	case GameScene::Phase::kDeath:
+	case Phase::kDeath:
 
 		// 天球の更新
 		skydome_->Update();
@@ -212,17 +219,6 @@ void GameScene::Update() {
 		}
 		break;
 	}
-
-#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_SPACE)) {
-		if (isDebugCameraActive_ == true)
-			isDebugCameraActive_ = false;
-		else
-			isDebugCameraActive_ = true;
-	}
-#endif
-
-
 }
 
 
@@ -355,17 +351,7 @@ void GameScene::CheckAllCollisions()
 void GameScene::ChangePhase()
 {
 	switch (phase_){
-	case GameScene::Phase::kPlay:
-
-		// 自キャラの状態をチェック
-		if (player_->IsDead()) {
-			// 死亡フェーズに切り替え
-			phase_ = Phase::kDeath;
-			// 自キャラの座標を取得
-			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
-			// 自キャラの座標にデスパーティクルを発生、初期化
-			deathParticles_->Initialize(modelDeathParticlse_, &viewProjection_, deathParticlesPosition);
-		}
+	case Phase::kPlay:
 
 		// 自キャラの更新
 		player_->Update();
@@ -413,54 +399,22 @@ void GameScene::ChangePhase()
 			viewProjection_.TransferMatrix();
 		}
 
+		// 自キャラの状態をチェック
+		if (player_->IsDead()) {
+			// 死亡フェーズに切り替え
+			phase_ = Phase::kDeath;
+			// 自キャラの座標を取得
+			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
+			// 自キャラの座標にデスパーティクルを発生、初期化
+			deathParticles_->Initialize(modelDeathParticlse_, &viewProjection_, deathParticlesPosition);
+		}
+
 		// 全てのあたり判定を行う
 		CheckAllCollisions();
+
 		break;
-	case GameScene::Phase::kDeath:
+	case Phase::kDeath:
 
-		// 天球の更新
-		skydome_->Update();
-
-		// 敵の更新
-		for (Enemy* enemy : enemies_) {
-			enemy->Update();
-		}
-
-		// 縦横ブロック更新
-		for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
-			for (WorldTransform* worldTransformBlockYoko : worldTransformBlockTate) {
-				if (!worldTransformBlockYoko)
-					continue;
-
-				// アフィン変換行列の作成
-				//(MakeAffineMatrix：自分で作った数学系関数)
-				worldTransformBlockYoko->matWorld_ = 
-					MakeAffineMatrix(worldTransformBlockYoko->scale_, worldTransformBlockYoko->rotation_, worldTransformBlockYoko->translation_);
-
-				// 定数バッファに転送
-				worldTransformBlockYoko->TransferMatrix();
-			}
-		}
-
-		// カメラ処理
-		if (isDebugCameraActive_) {
-			// デバッグカメラの更新
-			debugCamera_->Update();
-			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-			// ビュープロジェクション行列の転送
-			viewProjection_.TransferMatrix();
-		} else {
-			// ビュープロジェクション行列の更新と転送
-			viewProjection_.matView = cameraController_->GetViewProjection().matView;
-			viewProjection_.matProjection = cameraController_->GetViewProjection().matProjection;
-			// ビュープロジェクションの転送
-			viewProjection_.TransferMatrix();
-		}
-
-		if (deathParticles_) {
-			deathParticles_->Update();
-		}
 		break;
 	}
 
