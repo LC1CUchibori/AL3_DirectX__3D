@@ -276,6 +276,9 @@ void GameScene::Draw() {
 		deathParticles_->Draw();
 	}
 
+	if (!player_->IsDead()) {
+		player_->Draw();
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -353,52 +356,6 @@ void GameScene::ChangePhase()
 	switch (phase_){
 	case Phase::kPlay:
 
-		// 自キャラの更新
-		player_->Update();
-
-		// 天球の更新
-		skydome_->Update();
-
-		// カメラコントローラの更新
-		cameraController_->Update();
-
-		// 敵の更新
-		for (Enemy* enemy : enemies_) {
-			enemy->Update();
-		}
-
-		// 縦横ブロック更新
-		for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
-			for (WorldTransform* worldTransformBlockYoko : worldTransformBlockTate) {
-				if (!worldTransformBlockYoko)
-					continue;
-
-				// アフィン変換行列の作成
-				//(MakeAffineMatrix：自分で作った数学系関数)
-				worldTransformBlockYoko->matWorld_ = 
-					MakeAffineMatrix(worldTransformBlockYoko->scale_, worldTransformBlockYoko->rotation_, worldTransformBlockYoko->translation_);
-
-				// 定数バッファに転送
-				worldTransformBlockYoko->TransferMatrix();
-			}
-		}
-
-		// カメラ処理
-		if (isDebugCameraActive_) {
-			// デバッグカメラの更新
-			debugCamera_->Update();
-			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-			// ビュープロジェクション行列の転送
-			viewProjection_.TransferMatrix();
-		} else {
-			// ビュープロジェクション行列の更新と転送
-			viewProjection_.matView = cameraController_->GetViewProjection().matView;
-			viewProjection_.matProjection = cameraController_->GetViewProjection().matProjection;
-			// ビュープロジェクションの転送
-			viewProjection_.TransferMatrix();
-		}
-
 		// 自キャラの状態をチェック
 		if (player_->IsDead()) {
 			// 死亡フェーズに切り替え
@@ -406,6 +363,7 @@ void GameScene::ChangePhase()
 			// 自キャラの座標を取得
 			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
 			// 自キャラの座標にデスパーティクルを発生、初期化
+			deathParticles_ = new DeathParticles();
 			deathParticles_->Initialize(modelDeathParticlse_, &viewProjection_, deathParticlesPosition);
 		}
 
@@ -415,7 +373,10 @@ void GameScene::ChangePhase()
 		break;
 	case Phase::kDeath:
 
+		if (deathParticles_ && deathParticles_->IsFinished()) {
+			finished_=true;
+		}
+
 		break;
 	}
-
 }

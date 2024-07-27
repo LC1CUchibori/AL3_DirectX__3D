@@ -7,7 +7,6 @@
 #include "myMath.h"
 
 
-
 /// <summary>
 /// デス演出用パーティクル
 /// </summary>
@@ -18,6 +17,9 @@ public:
 	void Update();
 
 	void Draw();
+
+	bool IsFinished() const { return finished_; }
+
 
 private:
 	// モデルのポインタ
@@ -45,4 +47,6 @@ private:
 	ObjectColor objectColor_;
 	// 色の数値
 	Vector4 color_;
+
+	bool finished_ = false;
 };

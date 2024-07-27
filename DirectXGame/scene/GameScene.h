@@ -18,8 +18,6 @@
 #include <vector>
 
 
-
-
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -62,6 +60,8 @@ public: // メンバ関数
 	/// フェーズの切り替え
 	/// </summary>
 	void ChangePhase();
+
+	bool IsFinished() const { return finished_; }
 
 	/// <summary>
 	// AABB同士の交差判定
@@ -126,4 +126,6 @@ private: // メンバ変数
 
 	// ゲームの現在フェーズ(変数)
 	Phase phase_;
+
+	bool finished_ = false;
 };
