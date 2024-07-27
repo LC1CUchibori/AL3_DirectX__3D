@@ -372,11 +372,10 @@ void GameScene::ChangePhase()
 
 		break;
 	case Phase::kDeath:
-
+		// デス演出フェーズの処理
 		if (deathParticles_ && deathParticles_->IsFinished()) {
 			finished_=true;
 		}
-
 		break;
 	}
 }

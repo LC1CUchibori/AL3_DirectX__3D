@@ -94,7 +94,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// ゲームシーンの毎フレーム処理
 		//gameScene->Update();
 
-		titleScene->Update();
+		//titleScene->Update();
 		// シーン切り替え
 		ChangeScene();
 		// 現在シーン更新
@@ -109,7 +109,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// ゲームシーンの描画
 		//gameScene->Draw();
 		// タイトルシーンの描画
-		titleScene->Draw();
+		//titleScene->Draw();
 		// 現在シーンの描画
 		DrawScene();
 		// 軸表示の描画
@@ -125,6 +125,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 各種解放
 	delete titleScene;
 	delete gameScene;
+
 	// 3Dモデル解放
 	Model::StaticFinalize();
 	// ImGui解放
@@ -162,8 +163,6 @@ void ChangeScene()
 		titleScene = new TitleScene;
 		titleScene->Initialize();
 		break;
-	default:
-		break;
 	}
 }
 
@@ -177,8 +176,6 @@ void UpdataScene()
 	case Scene::kGame:
 		gameScene->Update();
 		break;
-	default:
-		break;
 	}
 }
 
@@ -191,8 +188,6 @@ void DrawScene()
 		break;
 	case Scene::kGame:
 		gameScene->Draw();
-		break;
-	default:
 		break;
 	}
 }
