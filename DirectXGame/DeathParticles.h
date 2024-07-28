@@ -18,7 +18,7 @@ public:
 
 	void Draw();
 
-	bool IsFinished() const { return finished_; }
+	bool IsFinished() const { return isFinished_; }
 
 
 private:
@@ -48,5 +48,5 @@ private:
 	// 色の数値
 	Vector4 color_;
 
-	bool finished_ = false;
+	//bool finished_ = false;
 };

@@ -272,13 +272,14 @@ void GameScene::Draw() {
 		}
 	}
 
+	if (!player_->IsDead()) {
+		player_->Draw();
+	}
+
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
 
-	if (!player_->IsDead()) {
-		player_->Draw();
-	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
