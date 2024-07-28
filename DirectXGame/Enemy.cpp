@@ -9,6 +9,7 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
+	worldTransform_.translation_.x += 15.0f;
 	worldTransform_.rotation_.y = 3.14f / 2.0f;
 
 	// 速度を設定する

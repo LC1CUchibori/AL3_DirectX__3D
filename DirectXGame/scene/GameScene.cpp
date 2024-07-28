@@ -251,8 +251,6 @@ void GameScene::Draw() {
 	// 3Dモデル描画
 	//	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 	
-	// 自キャラの描画
-	player_->Draw();
 
 	// 天球の描画
 	skydome_->Draw();
@@ -278,6 +276,16 @@ void GameScene::Draw() {
 
 	if (deathParticles_) {
 		deathParticles_->Draw();
+	}
+
+	switch (phase_)
+	{
+	case GameScene::Phase::kPlay:
+		// 自キャラの描画
+		player_->Draw();
+		break;
+	case GameScene::Phase::kDeath:
+		break;
 	}
 
 
