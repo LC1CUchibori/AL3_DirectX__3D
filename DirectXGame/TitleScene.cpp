@@ -10,10 +10,7 @@ void TitleScene::Initialize()
 	Timer_ = 0.0f;
 
 	// タイトルを近づける
-	titleWorldTransform_.translation_ = {0.0f, 1.0f, -40.0f};  // z値を調整して近づける
-
-	// 向きを逆にするために180度回転
-	titleWorldTransform_.rotation_ = {0.0f, std::numbers::pi_v<float>, 0.0f};
+	titleWorldTransform_.translation_ = { 0.0f, 1.0f, -40.0f };  // z値を調整して近づける
 }
 
 void TitleScene::Update()
