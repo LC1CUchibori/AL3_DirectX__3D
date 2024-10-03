@@ -85,6 +85,9 @@ private: // メンバ変数
 	// 3Dモデル
 	Model* model_ = nullptr;
 	Model* modelBlock_ = nullptr;
+	Model* modelRedBlock_ = nullptr;// 追加
+	Model* modelBlueBlock_ = nullptr;// 追加
+	Model* modelYellowBlock_ = nullptr;// 追加
 	Model* modelPlayer_ = nullptr;
 	Model* modelEnemy_ = nullptr;
 	Model* modelDeathParticlse_ = nullptr;

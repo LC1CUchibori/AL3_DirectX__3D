@@ -8,6 +8,9 @@
 enum class MapChipType {
 	kBlank, // 空白
 	lBlock, // ブロック
+	kRedBlock,
+	kBlueBlock,
+	kYellowBlock,
 };
 
 struct MapChipData {

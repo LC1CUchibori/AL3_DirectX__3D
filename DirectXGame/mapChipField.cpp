@@ -10,6 +10,9 @@ namespace {
 	std::map<std::string, MapChipType> mapChipTable = {
 		{"0",MapChipType::kBlank},
 		{"1",MapChipType::lBlock},
+		{"2",MapChipType::kRedBlock},
+		{"3",MapChipType::kBlueBlock},
+		{"4",MapChipType::kYellowBlock},
 	};
 
 }

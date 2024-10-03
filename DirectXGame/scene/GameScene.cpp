@@ -28,10 +28,10 @@ GameScene::~GameScene() {
 
 	delete deathParticles_;
 
-	for (Enemy* enemy : enemies_) {
+	/*for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
-	enemies_.clear();
+	enemies_.clear();*/
 }
 
 void GameScene::Initialize() {
@@ -44,6 +44,9 @@ void GameScene::Initialize() {
 	// 3Dモデルの生成
 	model_ = Model::Create();
 	modelBlock_ = Model::CreateFromOBJ("block", true);
+	modelRedBlock_ = Model::CreateFromOBJ("block", true);// 追加
+	modelBlueBlock_ = Model::CreateFromOBJ("block", true);
+	modelYellowBlock_ = Model::CreateFromOBJ("block", true);
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -83,7 +86,7 @@ void GameScene::Initialize() {
 	CameraController::Rect movableArea_ = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovableArea(movableArea_);
 
-	for (int32_t i= 0; i < 3; ++i) {
+	/*for (int32_t i= 0; i < 3; ++i) {
 		Enemy*newEnemy = new Enemy();
 		std::vector<Vector3> enemyPositions = {
 		{8.0f, 2.0f, 0.0f},
@@ -93,7 +96,7 @@ void GameScene::Initialize() {
 		modelEnemy_ = Model::CreateFromOBJ("enemy", true);
 		newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPositions[i]);
 		enemies_.push_back(newEnemy);
-	}
+	}*/
 
 	modelDeathParticlse_ = Model::CreateFromOBJ("deathParticle", true);
 
@@ -123,10 +126,10 @@ void GameScene::Update() {
 		// カメラコントローラの更新
 		cameraController_->Update();
 
-		// 敵の更新
-		for (Enemy* enemy : enemies_) {
-			enemy->Update();
-		}
+		//// 敵の更新
+		//for (Enemy* enemy : enemies_) {
+		//	enemy->Update();
+		//}
 
 		// 縦横ブロック更新
 		for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
@@ -177,10 +180,10 @@ void GameScene::Update() {
 		// 天球の更新
 		skydome_->Update();
 
-		// 敵の更新
-		for (Enemy* enemy : enemies_) {
-			enemy->Update();
-		}
+		//// 敵の更新
+		//for (Enemy* enemy : enemies_) {
+		//	enemy->Update();
+		//}
 
 		// 縦横ブロック更新
 		for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
@@ -255,10 +258,10 @@ void GameScene::Draw() {
 	// 天球の描画
 	skydome_->Draw();
 
-	// 敵の描画
-	for (Enemy* enemy : enemies_) {
-		enemy->Draw();
-	}
+	//// 敵の描画
+	//for (Enemy* enemy : enemies_) {
+	//	enemy->Draw();
+	//}
 
 	//縦横ブロック描画
     for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
@@ -267,6 +270,36 @@ void GameScene::Draw() {
 				continue;
 
 			modelBlock_->Draw(*worldTransformBlockYoko, viewProjection_);
+		}
+	}
+
+	//縦横ブロック描画
+	for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlockYoko : worldTransformBlockTate) {
+			if (!worldTransformBlockYoko)
+				continue;
+
+			modelRedBlock_->Draw(*worldTransformBlockYoko, viewProjection_);
+		}
+	}
+
+	//縦横ブロック描画
+	for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlockYoko : worldTransformBlockTate) {
+			if (!worldTransformBlockYoko)
+				continue;
+
+			modelBlueBlock_->Draw(*worldTransformBlockYoko, viewProjection_);
+		}
+	}
+
+	//縦横ブロック描画
+	for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlockYoko : worldTransformBlockTate) {
+			if (!worldTransformBlockYoko)
+				continue;
+
+			modelYellowBlock_->Draw(*worldTransformBlockYoko, viewProjection_);
 		}
 	}
 
@@ -331,6 +364,39 @@ void GameScene::GenerateBlcoks()
 			}
 		}
 	}
+
+	for (uint32_t i = 0; i < numBlockVirticle; ++i) {
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
+			if (mapChipField_->GetMapChipTypeByIndex(j,i)==MapChipType::kRedBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+			}
+		}
+	}
+
+	for (uint32_t i = 0; i < numBlockVirticle; ++i) {
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
+			if (mapChipField_->GetMapChipTypeByIndex(j,i)==MapChipType::kBlueBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+			}
+		}
+	}
+
+	for (uint32_t i = 0; i < numBlockVirticle; ++i) {
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
+			if (mapChipField_->GetMapChipTypeByIndex(j,i)==MapChipType::kYellowBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+			}
+		}
+	}
 }
 
 void GameScene::CheckAllCollisions()
@@ -344,18 +410,18 @@ void GameScene::CheckAllCollisions()
 
 		// 自キャラの座標
 		aabb1 = player_->GetAABB();
-		for (Enemy* enemy : enemies_) {
-			// 敵弾の座標
-			aabb2 = enemy->GetAABB();
+		//for (Enemy* enemy : enemies_) {
+		//	// 敵弾の座標
+		//	aabb2 = enemy->GetAABB();
 
-			// AABB同士の交差判定(
-			if (IsCollision(aabb1, aabb2)) {
-				// 自キャラの衝突判定コールバックを呼び出す
-				player_->OnCollision(enemy);
-				// 敵弾の衝突判定コールバックを呼び出す
-					enemy->OnCollision(player_);
-			}
-		}
+		//	// AABB同士の交差判定(
+		//	if (IsCollision(aabb1, aabb2)) {
+		//		// 自キャラの衝突判定コールバックを呼び出す
+		//		player_->OnCollision(enemy);
+		//		// 敵弾の衝突判定コールバックを呼び出す
+		//			enemy->OnCollision(player_);
+		//	}
+		//}
 	}
 #pragma endregion
 }

@@ -19,13 +19,25 @@ enum class Scene {
 	kGame,
 };
 
+enum class PColor {
+	Red,
+	Blue,
+	Yellow,
+};
+
 Scene scene = Scene::kUnknown;
+
+PColor pColor = PColor::Red;
+
 
 void ChangeScene();
 
 void UpdataScene();
 
 void DrawScene();
+
+void ChangePlayer();
+
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -95,6 +107,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//gameScene->Update();
 
 		//titleScene->Update();
+		
+		void ChangePlayer();
+		
 		// シーン切り替え
 		ChangeScene();
 		// 現在シーン更新
@@ -190,6 +205,31 @@ void DrawScene()
 		break;
 	case Scene::kGame:
 		gameScene->Draw();
+		break;
+	}
+}
+
+void ChangePlayer() {
+	switch (pColor) {
+	case PColor::Red:
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+			pColor = PColor::Blue;
+		}
+
+		break;
+
+	case PColor::Blue:
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+			pColor = PColor::Yellow;
+		}
+
+		break;
+
+	case PColor::Yellow:
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+			pColor = PColor::Red;
+		}
+
 		break;
 	}
 }

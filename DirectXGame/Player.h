@@ -106,6 +106,8 @@ public:
 	// デスフラグのGetter
 	bool IsDead()const { return isDead_; }
 
+
+
 private:
 	// デスフラグ
 	bool  isDead_ = false;
@@ -122,6 +124,7 @@ private:
 	static inline const float kLimitRunSpeed = 1.0f;
 
 	LRDirection lrDirection_ = LRDirection::kRight;
+
 	// 旋回開始時の角度
 	float turnFirstRotationY_ = 0.0f;
 	// 旋回タイマー
@@ -151,6 +154,6 @@ private:
 
 	static inline const float firstSpeed = 1.0f;
 
-
+	
 };
 
