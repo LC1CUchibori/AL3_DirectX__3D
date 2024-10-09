@@ -58,12 +58,28 @@ void Player::Update() {
 	//-----------8,行列計算----------*
 	// 行列計算
 	worldTransform_.UpdateMatrix();
+
+	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+		SwithColorState();
+	}
 }
 
 void Player::Draw() {
 
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, *viewProjection_);
+
+	switch (currentColorState) {
+	case ColorState::Red:
+		// 赤色の描画処理
+		break;
+	case ColorState::Yellow:
+		// 緑色の描画処理
+		break;
+	case ColorState::Blue:
+		// 青色の描画処理
+		break;
+	}
 }
 
 void Player::MoveInput() {
@@ -239,6 +255,17 @@ void Player::SwitchGrandState(const CollisionMapInfo& info) {
 			// 着地状態に切り替える
 			onGround_ = true;
 		}
+	}
+}
+
+void Player::SwithColorState()
+{
+	if (currentColorState == ColorState::Red) {
+		currentColorState = ColorState::Yellow;
+	} else if (currentColorState == ColorState::Yellow) {
+		currentColorState = ColorState::Blue;
+	} else {
+		currentColorState = ColorState::Red;
 	}
 }
 

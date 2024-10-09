@@ -75,6 +75,8 @@ public:
 
 	void SwitchGrandState(const CollisionMapInfo& info);
 
+	void SwithColorState();
+
 	// 左右
 	enum class LRDirection {
 		kRight,
@@ -90,6 +92,14 @@ public:
 
 		kNumCorner       // 要素数
 	};
+
+	enum class ColorState {
+		Red,
+		Blue,
+		Yellow,
+	};
+
+	ColorState currentColorState = ColorState::Red;
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
