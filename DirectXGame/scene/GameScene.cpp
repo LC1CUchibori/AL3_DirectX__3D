@@ -24,6 +24,10 @@ GameScene::~GameScene() {
 
 	delete modelPlayer_;
 
+	delete modelPlayer2_;
+
+	delete modelPlayer3_;
+
 	delete modelEnemy_;
 
 	delete deathParticles_;
@@ -62,11 +66,23 @@ void GameScene::Initialize() {
 
 	// 自キャラの生成
 	player_ = new Player();
-	modelPlayer_ = Model::CreateFromOBJ("Player",true);
+	modelPlayer_ = Model::CreateFromOBJ("RedPlayer",true);
+
+	player2_ = new Player();
+	modelPlayer2_ = Model::CreateFromOBJ("BluePlayer",true);
+
+	player3_ = new Player();
+	modelPlayer3_ = Model::CreateFromOBJ("YellowPlayer",true);
 
 	// 自キャラの初期化
 	player_->Initialize(modelPlayer_,&viewProjection_,playerPosition);
 	player_->SetMapChipField(mapChipField_);
+
+	player2_->Initialize(modelPlayer2_,&viewProjection_,playerPosition);
+	player2_->SetMapChipField(mapChipField_);
+
+	player3_->Initialize(modelPlayer3_,&viewProjection_,playerPosition);
+	player3_->SetMapChipField(mapChipField_);
 
 
 	// 天球の生成
@@ -119,6 +135,8 @@ void GameScene::Update() {
 
 		// 自キャラの更新
 		player_->Update();
+		player2_->Update();
+		player3_->Update();
 
 		// 天球の更新
 		skydome_->Update();
@@ -307,6 +325,14 @@ void GameScene::Draw() {
 		player_->Draw();
 	}
 
+	if (!player2_->IsDead()) {
+		player2_->Draw();
+	}
+
+	if (!player3_->IsDead()) {
+		player3_->Draw();
+	}
+
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
@@ -316,6 +342,8 @@ void GameScene::Draw() {
 	case GameScene::Phase::kPlay:
 		// 自キャラの描画
 		player_->Draw();
+		player2_->Draw();
+		player3_->Draw();
 		break;
 	case GameScene::Phase::kDeath:
 		break;
@@ -410,6 +438,8 @@ void GameScene::CheckAllCollisions()
 
 		// 自キャラの座標
 		aabb1 = player_->GetAABB();
+		aabb1 = player2_->GetAABB();
+		aabb1 = player3_->GetAABB();
 		//for (Enemy* enemy : enemies_) {
 		//	// 敵弾の座標
 		//	aabb2 = enemy->GetAABB();
@@ -432,7 +462,7 @@ void GameScene::ChangePhase()
 	case Phase::kPlay:
 
 		// 自キャラの状態をチェック
-		if (player_->IsDead()) {
+		if (player_->IsDead()&&player2_->IsDead()&&player3_->IsDead()) {
 			// 死亡フェーズに切り替え
 			phase_ = Phase::kDeath;
 			// 自キャラの座標を取得

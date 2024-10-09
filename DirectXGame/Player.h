@@ -127,6 +127,7 @@ private:
 	// モデル
 	Model* model_ = nullptr;
 	Model* model2_ = nullptr;
+	Model* model3_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 
 	Vector3 velocity_ = {};

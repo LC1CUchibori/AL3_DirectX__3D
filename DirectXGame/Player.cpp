@@ -20,6 +20,7 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 	// 引数の内容をメンバ変数に記録
 	model_ = model;
 	model2_ = model;
+	model3_ = model;
 	// textureHandle_ = textureHandle;
 	viewProjection_ = viewProjection;
 }
@@ -60,24 +61,24 @@ void Player::Update() {
 	// 行列計算
 	worldTransform_.UpdateMatrix();
 
-	if (Input::GetInstance()->PushKey(DIK_1)) {
+	if (Input::GetInstance()->TriggerKey(DIK_1)) {
 		SwithColorState();
 	}
 }
 
 void Player::Draw() {
-	
-	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *viewProjection_);
-
 	switch (currentColorState) {
 	case ColorState::Red:
+		// 3Dモデルを描画
+		model_->Draw(worldTransform_, *viewProjection_);
 		break;
 	case ColorState::Yellow:
-		// 緑色の描画処理
+		// 黄色の描画処理
+		model2_->Draw(worldTransform_, *viewProjection_);
 		break;
 	case ColorState::Blue:
 		// 青色の描画処理
+		model3_->Draw(worldTransform_, *viewProjection_);
 		break;
 	}
 }

@@ -89,6 +89,8 @@ private: // メンバ変数
 	Model* modelBlueBlock_ = nullptr;// 追加
 	Model* modelYellowBlock_ = nullptr;// 追加
 	Model* modelPlayer_ = nullptr;
+	Model* modelPlayer2_ = nullptr;
+	Model* modelPlayer3_ = nullptr;
 	Model* modelEnemy_ = nullptr;
 	Model* modelDeathParticlse_ = nullptr;
 	// ワールドトランスフォーム
@@ -98,6 +100,9 @@ private: // メンバ変数
 
 	// 自キャラ
 	Player* player_ = nullptr;
+	Player* player2_ = nullptr;
+	Player* player3_ = nullptr;
+
 
 	// 縦横ブロック配列
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
