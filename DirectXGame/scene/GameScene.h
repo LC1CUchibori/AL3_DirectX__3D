@@ -100,8 +100,7 @@ private: // メンバ変数
 
 	// 自キャラ
 	Player* player_ = nullptr;
-	Player* player2_ = nullptr;
-	Player* player3_ = nullptr;
+	
 
 
 	// 縦横ブロック配列

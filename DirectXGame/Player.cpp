@@ -6,7 +6,7 @@
 #include <cassert>
 #include <numbers>
 
-void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
+void Player::Initialize(Model* model,Model*model2,Model*model3, ViewProjection* viewProjection, const Vector3& position) {
 
 	// NULLチェック
 	assert(model);
@@ -19,8 +19,8 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 
 	// 引数の内容をメンバ変数に記録
 	model_ = model;
-	model2_ = model;
-	model3_ = model;
+	model2_ = model2;
+	model3_ = model3;
 	// textureHandle_ = textureHandle;
 	viewProjection_ = viewProjection;
 }

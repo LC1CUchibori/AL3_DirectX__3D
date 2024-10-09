@@ -19,7 +19,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model,ViewProjection* viewProjection,const Vector3& position);
+	void Initialize(Model* model,Model*model2,Model*model3,ViewProjection* viewProjection,const Vector3& position);
 
 	/// <summary>
 	/// 更新
