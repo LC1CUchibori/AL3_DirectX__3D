@@ -66,10 +66,12 @@ void Player::Update() {
 }
 
 void Player::Draw() {
+	
+	// 3Dモデルを描画
+	model_->Draw(worldTransform_, *viewProjection_);
+
 	switch (currentColorState) {
 	case ColorState::Red:
-		// 3Dモデルを描画
-		model_->Draw(worldTransform_, *viewProjection_);
 		break;
 	case ColorState::Yellow:
 		// 緑色の描画処理
