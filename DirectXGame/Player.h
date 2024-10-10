@@ -19,7 +19,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model,ViewProjection* viewProjection,const Vector3& position);
+	void Initialize(Model* model, Model* model2, Model* model3, ViewProjection* viewProjection, const Vector3& position);
 
 	/// <summary>
 	/// 更新
@@ -75,6 +75,8 @@ public:
 
 	void SwitchGrandState(const CollisionMapInfo& info);
 
+	void SwithColorState();
+
 	// 左右
 	enum class LRDirection {
 		kRight,
@@ -91,6 +93,14 @@ public:
 		kNumCorner       // 要素数
 	};
 
+	enum class ColorState {
+		Red,
+		Blue,
+		Yellow,
+	};
+
+	ColorState currentColorState = ColorState::Red;
+
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
 	// ワールド座標を取得
@@ -106,6 +116,8 @@ public:
 	// デスフラグのGetter
 	bool IsDead()const { return isDead_; }
 
+
+
 private:
 	// デスフラグ
 	bool  isDead_ = false;
@@ -114,6 +126,8 @@ private:
 	WorldTransform worldTransform_;
 	// モデル
 	Model* model_ = nullptr;
+	Model* model2_ = nullptr;
+	Model* model3_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 
 	Vector3 velocity_ = {};
@@ -122,6 +136,7 @@ private:
 	static inline const float kLimitRunSpeed = 1.0f;
 
 	LRDirection lrDirection_ = LRDirection::kRight;
+
 	// 旋回開始時の角度
 	float turnFirstRotationY_ = 0.0f;
 	// 旋回タイマー
@@ -151,6 +166,6 @@ private:
 
 	static inline const float firstSpeed = 1.0f;
 
-
+	ObjectColor objectColor_;
+	Vector4 color_;
 };
-

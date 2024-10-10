@@ -1,3 +1,4 @@
+
 #include <vector>
 #include "Vector3.h"
 #include <string>
@@ -8,6 +9,9 @@
 enum class MapChipType {
 	kBlank, // 空白
 	lBlock, // ブロック
+	kRedBlock,
+	kBlueBlock,
+	kYellowBlock,
 };
 
 struct MapChipData {
@@ -32,7 +36,7 @@ public:
 		float bottom;
 	};
 
-    // 1ブロックのサイズ
+	// 1ブロックのサイズ
 	static inline const float kBlockWidth = 1.0f;
 	static inline const float kBlockHeight = 1.0f;
 	// ブロックの個数

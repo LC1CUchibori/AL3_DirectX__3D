@@ -6,7 +6,7 @@
 #include <cassert>
 #include <numbers>
 
-void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
+void Player::Initialize(Model* model, Model* model2, Model* model3, ViewProjection* viewProjection, const Vector3& position) {
 
 	// NULLチェック
 	assert(model);
@@ -19,8 +19,13 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 
 	// 引数の内容をメンバ変数に記録
 	model_ = model;
+	model2_ = model2;
+	model3_ = model3;
 	// textureHandle_ = textureHandle;
 	viewProjection_ = viewProjection;
+
+	objectColor_.Initialize();
+	color_ = { 1,1,1,1 };
 }
 
 void Player::Update() {
@@ -58,12 +63,31 @@ void Player::Update() {
 	//-----------8,行列計算----------*
 	// 行列計算
 	worldTransform_.UpdateMatrix();
+
+	if (Input::GetInstance()->TriggerKey(DIK_1)) {
+		SwithColorState();
+	}
+
+	color_.w = std::clamp(0.0f, 0.0f, 1.0f);
+	objectColor_.SetColor(color_);
+	objectColor_.TransferMatrix();
 }
 
 void Player::Draw() {
-
-	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *viewProjection_);
+	switch (currentColorState) {
+	case ColorState::Red:
+		// 3Dモデルを描画
+		model_->Draw(worldTransform_, *viewProjection_);
+		break;
+	case ColorState::Blue:
+		// 黄色の描画処理
+		model2_->Draw(worldTransform_, *viewProjection_);
+		break;
+	case ColorState::Yellow:
+		// 青色の描画処理
+		model3_->Draw(worldTransform_, *viewProjection_);
+		break;
+	}
 }
 
 void Player::MoveInput() {
@@ -73,11 +97,11 @@ void Player::MoveInput() {
 	// 接地状態
 	if (onGround_) {
 		// 左右移動操作
-		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
+		if (Input::GetInstance()->PushKey(DIK_D) || Input::GetInstance()->PushKey(DIK_A)) {
 
 			// 左右加速
 			Vector3 acceleration = {};
-			if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+			if (Input::GetInstance()->PushKey(DIK_D)) {
 
 				// 左移動中の右入力
 				if (velocity_.x < 0.0f) {
@@ -91,7 +115,7 @@ void Player::MoveInput() {
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					turnTimer_ = kLimitRunSpeed;
 				}
-			} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+			} else if (Input::GetInstance()->PushKey(DIK_A)) {
 
 				// 右移動中の左入力
 				if (velocity_.x > 0.0f) {
@@ -118,7 +142,7 @@ void Player::MoveInput() {
 			velocity_.y *= (1.0f - kAttenuation);
 			velocity_.z *= (1.0f - kAttenuation);
 		}
-		if (Input::GetInstance()->PushKey(DIK_UP)) {
+		if (Input::GetInstance()->PushKey(DIK_W)) {
 			// ジャンプ初速
 			velocity_.x += 0;
 			velocity_.y += kJumpAcceleration;
@@ -140,7 +164,7 @@ void Player::MoveInput() {
 	// worldTransform_.translation_.y += velocity_.y;
 	// worldTransform_.translation_.z += velocity_.z;
 
-	
+
 }
 
 void Player::CeilingContact(const CollisionMapInfo& info) {
@@ -183,6 +207,57 @@ void Player::SwitchGrandState(const CollisionMapInfo& info) {
 				hit = true;
 			}
 
+			indexSet =mapChipField_->GetMapChipIndexSetByPosition(positonsNew[kLeftBottom] + Vector3(0, -0.1f, 0));
+			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+			if (mapChipType == MapChipType::kRedBlock) {
+				if (currentColorState == ColorState::Red) {
+					hit = true;
+				}
+			}
+
+			// 右下点の判定
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positonsNew[kRightBottom] + Vector3(0, -0.1f, 0));
+			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+			if (mapChipType == MapChipType::kRedBlock) {
+				if (currentColorState == ColorState::Red) {
+					hit = true;
+				}
+			}
+
+			indexSet =mapChipField_->GetMapChipIndexSetByPosition(positonsNew[kLeftBottom] + Vector3(0, -0.1f, 0));
+			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+			if (mapChipType == MapChipType::kBlueBlock) {
+				if (currentColorState == ColorState::Blue) {
+					hit = true;
+				}
+			}
+
+			// 右下点の判定
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positonsNew[kRightBottom] + Vector3(0, -0.1f, 0));
+			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+			if (mapChipType == MapChipType::kBlueBlock) {
+				if (currentColorState == ColorState::Blue) {
+					hit = true;
+				}
+			}
+
+			indexSet =mapChipField_->GetMapChipIndexSetByPosition(positonsNew[kLeftBottom] + Vector3(0, -0.1f, 0));
+			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+			if (mapChipType == MapChipType::kYellowBlock) {
+				if (currentColorState == ColorState::Yellow) {
+					hit = true;
+				}
+			}
+
+			// 右下点の判定
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positonsNew[kRightBottom] + Vector3(0, -0.1f, 0));
+			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+			if (mapChipType == MapChipType::kYellowBlock) {
+				if (currentColorState == ColorState::Yellow) {
+					hit = true;
+				}
+			}
+
 			// 落下開始
 			if (!hit) {
 				// 空中状態に切り替える
@@ -200,6 +275,17 @@ void Player::SwitchGrandState(const CollisionMapInfo& info) {
 			// 着地状態に切り替える
 			onGround_ = true;
 		}
+	}
+}
+
+void Player::SwithColorState()
+{
+	if (currentColorState == ColorState::Red) {
+		currentColorState = ColorState::Yellow;
+	} else if (currentColorState == ColorState::Yellow) {
+		currentColorState = ColorState::Blue;
+	} else {
+		currentColorState = ColorState::Red;
 	}
 }
 
@@ -238,6 +324,57 @@ void Player::MapCollisionUp(CollisionMapInfo& info) {
 	if (mapChipType == MapChipType::lBlock) {
 		hit = true;
 	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kRedBlock) {
+		if (currentColorState == ColorState::Red) {
+			hit = true;
+		}
+	}
+
+	// 右上点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kRedBlock) {
+		if (currentColorState == ColorState::Red) {
+			hit = true;
+		}
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlueBlock) {
+		if (currentColorState == ColorState::Blue) {
+			hit = true;
+		}
+	}
+
+	// 右上点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlueBlock) {
+		if (currentColorState == ColorState::Blue) {
+			hit = true;
+		}
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kYellowBlock) {
+		if (currentColorState == ColorState::Yellow) {
+			hit = true;
+		}
+	}
+	// 右上点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kYellowBlock) {
+		if (currentColorState == ColorState::Yellow) {
+			hit = true;
+		}
+	}
+
 	// ブロックにヒット？
 	if (hit) {
 		MapChipField::IndexSet indexSetNow;
@@ -286,6 +423,63 @@ void Player::MapCollisionDown(CollisionMapInfo& info) {
 		hit = true;
 	}
 
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	mapChipTypeNext = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
+	if (mapChipType == MapChipType::kRedBlock && mapChipTypeNext != MapChipType::kRedBlock) {
+		if (currentColorState == ColorState::Red) {
+			hit = true;
+		}
+	}
+
+	// 右下点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	mapChipTypeNext = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
+	if (mapChipType == MapChipType::kRedBlock && mapChipTypeNext != MapChipType::kRedBlock) {
+		if (currentColorState == ColorState::Red) {
+			hit = true;
+		}
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	mapChipTypeNext = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
+	if (mapChipType == MapChipType::kBlueBlock && mapChipTypeNext != MapChipType::kBlueBlock) {
+		if (currentColorState == ColorState::Blue) {
+			hit = true;
+		}
+	}
+
+	// 右下点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	mapChipTypeNext = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
+	if (mapChipType == MapChipType::kBlueBlock && mapChipTypeNext != MapChipType::kBlueBlock) {
+		if (currentColorState == ColorState::Blue) {
+			hit = true;
+		}
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	mapChipTypeNext = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
+	if (mapChipType == MapChipType::kYellowBlock && mapChipTypeNext != MapChipType::kYellowBlock) {
+		if (currentColorState == ColorState::Yellow) {
+			hit = true;
+		}
+	}
+
+	// 右下点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	mapChipTypeNext = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
+	if (mapChipType == MapChipType::kYellowBlock && mapChipTypeNext != MapChipType::kYellowBlock) {
+		if (currentColorState == ColorState::Yellow) {
+			hit = true;
+		}
+	}
+
 	// ブロックにヒット？
 	if (hit) {
 		MapChipField::IndexSet indexSetNow;
@@ -328,6 +522,57 @@ void Player::MapCollisionLeft(CollisionMapInfo& info) {
 		hit = true;
 	}
 
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kRedBlock) {
+		if (currentColorState == ColorState::Red) {
+			hit = true;
+		}
+	}
+
+	// 左上点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kRedBlock) {
+		if (currentColorState == ColorState::Red) {
+			hit = true;
+		}
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlueBlock) {
+		if (currentColorState == ColorState::Blue) {
+			hit = true;
+		}
+	}
+
+	// 左上点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlueBlock) {
+		if (currentColorState == ColorState::Blue) {
+			hit = true;
+		}
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kYellowBlock) {
+		if (currentColorState == ColorState::Yellow) {
+			hit = true;
+		}
+	}
+
+	// 左上点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kYellowBlock) {
+		if (currentColorState == ColorState::Yellow) {
+			hit = true;
+		}
+	}
+
 	if (hit) {
 		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 		info.movement_.x = std::max(0.0f, (rect.right - worldTransform_.translation_.x) - (kWidth / 2.0f + kBlank));
@@ -357,6 +602,57 @@ void Player::MapCollisionRight(CollisionMapInfo& info) {
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::lBlock) {
 		hit = true;
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kRedBlock) {
+		if (currentColorState == ColorState::Red) {
+			hit = true;
+		}
+	}
+
+	// 右上点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kRedBlock) {
+		if (currentColorState == ColorState::Red) {
+			hit = true;
+		}
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlueBlock) {
+		if (currentColorState == ColorState::Blue) {
+			hit = true;
+		}
+	}
+
+	// 右上点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlueBlock) {
+		if (currentColorState == ColorState::Blue) {
+			hit = true;
+		}
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kYellowBlock) {
+		if (currentColorState == ColorState::Yellow) {
+			hit = true;
+		}
+	}
+
+	// 右上点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kYellowBlock) {
+		if (currentColorState == ColorState::Yellow) {
+			hit = true;
+		}
 	}
 
 	if (hit) {
@@ -389,10 +685,10 @@ void Player::TurnControll() {
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 
 	Vector3 offsetTable[kNumCorner] = {
-	    {+kWidth / 2.0f, -kHeight / 2.0f, 0}, // kRightBottom
-	    {-kWidth / 2.0f, -kHeight / 2.0f, 0}, // kLeftBottom
-	    {+kWidth / 2.0f, +kHeight / 2.0f, 0}, // kRightTop
-	    {-kWidth / 2.0f, +kHeight / 2.0f, 0}  // kleftTop
+		{+kWidth / 2.0f, -kHeight / 2.0f, 0}, // kRightBottom
+		{-kWidth / 2.0f, -kHeight / 2.0f, 0}, // kLeftBottom
+		{+kWidth / 2.0f, +kHeight / 2.0f, 0}, // kRightTop
+		{-kWidth / 2.0f, +kHeight / 2.0f, 0}  // kleftTop
 	};
 
 	return center + offsetTable[static_cast<uint32_t>(corner)];

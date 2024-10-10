@@ -1,3 +1,4 @@
+
 #include <map>
 #include <string>
 #include <fstream>
@@ -10,6 +11,9 @@ namespace {
 	std::map<std::string, MapChipType> mapChipTable = {
 		{"0",MapChipType::kBlank},
 		{"1",MapChipType::lBlock},
+		{"2",MapChipType::kRedBlock},
+		{"3",MapChipType::kBlueBlock},
+		{"4",MapChipType::kYellowBlock},
 	};
 
 }
@@ -92,13 +96,13 @@ MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 	if (yIndex < 0 || kNumBlockVirtical - 1 < yIndex) {
 		return MapChipType::kBlank;
 	}
-	
+
 	return mapChipData_.data[yIndex][xIndex];
 }
 
 Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex)
 {
-	
+
 	return Vector3(kBlockWidth*xIndex,kBlockHeight*(kNumBlockVirtical-1-yIndex),0);
 }
 
@@ -111,5 +115,3 @@ uint32_t MapChipField::GetNumBlockHorizontal() const
 {
 	return kNumBlockHorizontal;
 }
-
-

@@ -73,6 +73,7 @@ public: // メンバ関数
 			(a.min.z <= b.max.z && a.max.z >= b.min.z);
 	}
 
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -85,7 +86,12 @@ private: // メンバ変数
 	// 3Dモデル
 	Model* model_ = nullptr;
 	Model* modelBlock_ = nullptr;
+	Model* modelRedBlock_ = nullptr;// 追加
+	Model* modelBlueBlock_ = nullptr;// 追加
+	Model* modelYellowBlock_ = nullptr;// 追加
 	Model* modelPlayer_ = nullptr;
+	Model* modelPlayer2_ = nullptr;
+	Model* modelPlayer3_ = nullptr;
 	Model* modelEnemy_ = nullptr;
 	Model* modelDeathParticlse_ = nullptr;
 	// ワールドトランスフォーム
@@ -96,8 +102,18 @@ private: // メンバ変数
 	// 自キャラ
 	Player* player_ = nullptr;
 
+
 	// 縦横ブロック配列
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+
+	// 縦横ブロック配列
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks2_;
+
+	// 縦横ブロック配列
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks3_;
+
+	// 縦横ブロック配列
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks4_;
 
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
@@ -128,4 +144,7 @@ private: // メンバ変数
 	Phase phase_;
 
 	bool finished_ = false;
+
+	ObjectColor objectColor_;
+	Vector4 color_;
 };
