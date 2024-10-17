@@ -14,7 +14,13 @@ class Player;
 
 class Enemy {
 public:
-	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position);
+	enum class ColorState {
+		Red,
+		Blue,
+		Yellow,
+	};
+
+	void Initialize(Model* model, Model* model2, Model* model3, ViewProjection* viewProjection, const Vector3& positionconst,ColorState color);
 
 	void Update();
 
@@ -41,11 +47,16 @@ public:
 
 	void OnCollision(const Player* player);
 
+
+	ColorState currentColorState_ = ColorState::Red;
+
 private:
     // ワールドトランスフォーム
 	WorldTransform worldTransform_;
 	// モデルのポインタ
 	Model* model_ = nullptr;
+	Model* model2_ = nullptr;
+	Model* model3_ = nullptr;
 	// ビュープロジェクションのポインタ
 	ViewProjection* viewProjection_ = nullptr;
 	// マップチップフィールドのポインタ
@@ -68,4 +79,7 @@ private:
 	static inline const float kWidth = 0.8f;
 
 	static inline const float kHeight = 0.8f;
+
+	ObjectColor objectColor_;
+	Vector4 color_;
 };

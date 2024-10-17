@@ -15,6 +15,7 @@ void Player::Initialize(Model* model, Model* model2, Model* model3, ViewProjecti
 	worldTransform_.translation_ = position;
 
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / -2.0f;
+	worldTransform_.translation_.z =-0.1f;
 
 
 	// 引数の内容をメンバ変数に記録

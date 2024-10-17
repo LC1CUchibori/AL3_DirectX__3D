@@ -1,10 +1,13 @@
 #include "Enemy.h"
 #include <numbers>
+#include <algorithm>
 
-void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position)
+void Enemy::Initialize(Model* model, Model* model2, Model* model3, ViewProjection* viewProjection, const Vector3& position,ColorState color)
 {
 	// モデル変数に記録
 	model_ = model;
+	model2_ = model2;
+	model3_ = model3;
 	viewProjection_ = viewProjection;
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -17,6 +20,10 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 
 	// 時間を設定する
 	walkTimer_ = 0.0f;
+
+	objectColor_.Initialize();
+
+	currentColorState_ = color;
 }
 
 void Enemy::Update()
@@ -34,12 +41,26 @@ void Enemy::Update()
 
 	// 行列計算
 	worldTransform_.UpdateMatrix();
+
+	color_.w = std::clamp(0.0f, 0.0f, 1.0f);
+	objectColor_.SetColor(color_);
+	objectColor_.TransferMatrix();
 }
 
 void Enemy::Draw()
 {
-	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *viewProjection_);
+	if (currentColorState_ == ColorState::Red) {
+		// 3Dモデルを描画
+		model_->Draw(worldTransform_, *viewProjection_);
+	}
+	if (currentColorState_ == ColorState::Blue) {
+		// 3Dモデルを描画
+		model2_->Draw(worldTransform_, *viewProjection_);
+	}
+	if (currentColorState_ == ColorState::Yellow) {
+		// 3Dモデルを描画
+		model3_->Draw(worldTransform_, *viewProjection_);
+	}
 }
 
 Vector3 Enemy::GetWorldPosition()

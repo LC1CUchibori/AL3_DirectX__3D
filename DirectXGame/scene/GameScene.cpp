@@ -128,7 +128,9 @@ void GameScene::Initialize() {
 			{8.0f, 6.0f, 0.0f}
 		};
 		modelEnemy_ = Model::CreateFromOBJ("enemy", true);
-		newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPositions[i]);
+		modelEnemy2_ = Model::CreateFromOBJ("enemy",true);
+		modelEnemy3_ = Model::CreateFromOBJ("enemy", true);
+		newEnemy->Initialize(modelEnemy_,modelEnemy2_,modelEnemy3_, &viewProjection_, enemyPositions[i],Enemy::ColorState::Red);
 		enemies_.push_back(newEnemy);
 	}
 

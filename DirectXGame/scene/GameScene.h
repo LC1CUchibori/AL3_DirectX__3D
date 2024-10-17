@@ -93,6 +93,8 @@ private: // メンバ変数
 	Model* modelPlayer2_ = nullptr;
 	Model* modelPlayer3_ = nullptr;
 	Model* modelEnemy_ = nullptr;
+	Model* modelEnemy2_ = nullptr;
+	Model* modelEnemy3_ = nullptr;
 	Model* modelDeathParticlse_ = nullptr;
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
