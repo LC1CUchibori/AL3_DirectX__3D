@@ -647,14 +647,32 @@ void GameScene::CheckAllCollisions()
 		aabb1 = player_->GetAABB();
 
 
+		
+
 		for (Enemy* enemy : enemies_) {
 			// 敵弾の座標
 			aabb2 = enemy->GetAABB();
 
 			// AABB同士の交差判定(
 			if (IsCollision(aabb1, aabb2)) {
-				// 自キャラの衝突判定コールバックを呼び出す
-				player_->OnCollision(enemy);
+				if (enemy->currentColorState_ == Enemy::ColorState::Red) {
+					if (player_->currentColorState == Player::ColorState::Red) {
+						// 自キャラの衝突判定コールバックを呼び出す
+						player_->OnCollision(enemy);
+					}
+				}
+				if (enemy->currentColorState_ == Enemy::ColorState::Blue) {
+					if (player_->currentColorState == Player::ColorState::Blue) {
+						// 自キャラの衝突判定コールバックを呼び出す
+						player_->OnCollision(enemy);
+					}
+				}
+				if (enemy->currentColorState_ == Enemy::ColorState::Yellow) {
+					if (player_->currentColorState == Player::ColorState::Yellow) {
+						// 自キャラの衝突判定コールバックを呼び出す
+						player_->OnCollision(enemy);
+					}
+				}
 				// 敵弾の衝突判定コールバックを呼び出す
 				enemy->OnCollision(player_);
 			}
