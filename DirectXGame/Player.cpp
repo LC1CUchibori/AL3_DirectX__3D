@@ -27,6 +27,8 @@ void Player::Initialize(Model* model, Model* model2, Model* model3, ViewProjecti
 
 	objectColor_.Initialize();
 	color_ = { 1,1,1,1 };
+
+	
 }
 
 void Player::Update() {
@@ -376,6 +378,19 @@ void Player::MapCollisionUp(CollisionMapInfo& info) {
 		}
 	}
 
+	//// ゴールのあたり判定
+	//indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	//mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	//if (mapChipType == MapChipType::kGoal) {
+	//		goalHit_ = true;
+	//}
+
+	//indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	//mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	//if (mapChipType == MapChipType::kGoal) {
+	//	goalHit_ = true;
+	//}
+
 	// ブロックにヒット？
 	if (hit) {
 		MapChipField::IndexSet indexSetNow;
@@ -481,6 +496,19 @@ void Player::MapCollisionDown(CollisionMapInfo& info) {
 		}
 	}
 
+	//// ゴールのあたり判定
+	//indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	//mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	//if (mapChipType == MapChipType::kGoal) {
+	//	goalHit_ = true;
+	//}
+
+	//indexSet2 = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	//mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	//if (mapChipType == MapChipType::kGoal) {
+	//	goalHit_ = true;
+	//}
+
 	// ブロックにヒット？
 	if (hit) {
 		MapChipField::IndexSet indexSetNow;
@@ -574,10 +602,25 @@ void Player::MapCollisionLeft(CollisionMapInfo& info) {
 		}
 	}
 
+	//// ゴールのあたり判定
+	//indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	//mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	//if (mapChipType == MapChipType::kGoal) {
+	//	goalHit_ = true;
+	//}
+
+	//indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	//mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	//if (mapChipType == MapChipType::kGoal) {
+	//	goalHit_ = true;
+	//}
+
 	if (hit) {
 		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 		info.movement_.x = std::max(0.0f, (rect.right - worldTransform_.translation_.x) - (kWidth / 2.0f + kBlank));
-	}}
+	}
+
+}
 
 void Player::MapCollisionRight(CollisionMapInfo& info) {
 	// 移動後の4つの角の座標
@@ -660,6 +703,19 @@ void Player::MapCollisionRight(CollisionMapInfo& info) {
 		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 		info.movement_.x = std::min(0.0f, (rect.left - worldTransform_.translation_.x) + (kWidth / 2.0f + kBlank));
 	}
+
+	//// ゴールのあたり判定
+	//indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	//mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	//if (mapChipType == MapChipType::kGoal) {
+	//	goalHit_ = true;
+	//}
+
+	//indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	//mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	//if (mapChipType == MapChipType::kGoal) {
+	//	goalHit_ = true;
+	//}
 }
 
 void Player::JudgmentMove(const CollisionMapInfo& info) {

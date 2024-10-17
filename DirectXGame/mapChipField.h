@@ -12,6 +12,7 @@ enum class MapChipType {
 	kRedBlock,
 	kBlueBlock,
 	kYellowBlock,
+	kGoal,
 };
 
 struct MapChipData {

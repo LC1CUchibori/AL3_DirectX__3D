@@ -14,6 +14,7 @@ namespace {
 		{"2",MapChipType::kRedBlock},
 		{"3",MapChipType::kBlueBlock},
 		{"4",MapChipType::kYellowBlock},
+		{"5",MapChipType::kGoal},
 	};
 
 }

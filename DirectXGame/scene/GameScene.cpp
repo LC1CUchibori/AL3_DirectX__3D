@@ -33,6 +33,12 @@ GameScene::~GameScene() {
 		}
 	}
 
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformGoal_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			delete worldTransformBlock;
+		}
+	}
+
 	worldTransformBlocks_.clear();
 
 	worldTransformBlocks2_.clear();
@@ -41,6 +47,7 @@ GameScene::~GameScene() {
 
 	worldTransformBlocks4_.clear();
 
+	worldTransformGoal_.clear();
 
 	delete debugCamera_;
 
@@ -55,6 +62,8 @@ GameScene::~GameScene() {
 	delete modelPlayer3_;
 
 	delete modelEnemy_;
+
+	delete modelGoal_;
 
 	delete deathParticles_;
 
@@ -93,9 +102,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = new Player();
 	modelPlayer_ = Model::CreateFromOBJ("RedPlayer",true);
-
 	modelPlayer2_ = Model::CreateFromOBJ("BluePlayer",true);
-
 	modelPlayer3_ = Model::CreateFromOBJ("YellowPlayer",true);
 
 	// 自キャラの初期化
@@ -120,17 +127,28 @@ void GameScene::Initialize() {
 	CameraController::Rect movableArea_ = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovableArea(movableArea_);
 
+
+	modelEnemy_ = Model::CreateFromOBJ("RedEnemy", true);
+	modelEnemy2_ = Model::CreateFromOBJ("BlueEnemy",true);
+	modelEnemy3_ = Model::CreateFromOBJ("YellowEnemy", true);
+
+	std::vector<Vector3> enemyPositions = {
+		{8.0f, 2.0f, 0.0f},
+		{8.0f, 4.0f, 0.0f},
+		{8.0f, 6.0f, 0.0f}
+	};
+
+	std::vector<Enemy::ColorState>enemyColor = {
+		Enemy::ColorState::Red,
+	    Enemy::ColorState::Blue,
+	    Enemy::ColorState::Yellow,
+	};
+
+	// 敵
 	for (int32_t i= 0; i < 3; ++i) {
 		Enemy*newEnemy = new Enemy();
-		std::vector<Vector3> enemyPositions = {
-			{8.0f, 2.0f, 0.0f},
-			{8.0f, 4.0f, 0.0f},
-			{8.0f, 6.0f, 0.0f}
-		};
-		modelEnemy_ = Model::CreateFromOBJ("enemy", true);
-		modelEnemy2_ = Model::CreateFromOBJ("enemy",true);
-		modelEnemy3_ = Model::CreateFromOBJ("enemy", true);
-		newEnemy->Initialize(modelEnemy_,modelEnemy2_,modelEnemy3_, &viewProjection_, enemyPositions[i],Enemy::ColorState::Red);
+		
+		newEnemy->Initialize(modelEnemy_,modelEnemy2_,modelEnemy3_, &viewProjection_, enemyPositions[i],enemyColor[i]);
 		enemies_.push_back(newEnemy);
 	}
 
@@ -139,12 +157,15 @@ void GameScene::Initialize() {
 	deathParticles_ = new DeathParticles();
 	deathParticles_->Initialize(modelDeathParticlse_, &viewProjection_, playerPosition);
 
+	modelGoal_ = Model::CreateFromOBJ("Goal",true);
+	
 
 	phase_ = Phase::kPlay;
 
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280,720);
 
+	// 色
 	objectColor_.Initialize();
 	color_ = { 1,1,1,1 };
 }
@@ -238,6 +259,22 @@ void GameScene::Update() {
 			}
 		}
 
+		// 縦横ブロック更新 ゴール
+		for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformGoal_) {
+			for (WorldTransform* worldTransformBlockYoko : worldTransformBlockTate) {
+				if (!worldTransformBlockYoko)
+					continue;
+
+				// アフィン変換行列の作成
+				//(MakeAffineMatrix：自分で作った数学系関数)
+				worldTransformBlockYoko->matWorld_ = 
+					MakeAffineMatrix(worldTransformBlockYoko->scale_, worldTransformBlockYoko->rotation_, worldTransformBlockYoko->translation_);
+
+				// 定数バッファに転送
+				worldTransformBlockYoko->TransferMatrix();
+			}
+		}
+
 		// カメラ処理
 		if (isDebugCameraActive_) {
 			// デバッグカメラの更新
@@ -270,6 +307,7 @@ void GameScene::Update() {
 
 		// 天球の更新
 		skydome_->Update();
+
 
 		// 敵の更新
 		for (Enemy* enemy : enemies_) {
@@ -442,6 +480,17 @@ void GameScene::Draw() {
 		}
 	}
 
+	//縦横ブロック描画　ゴール
+	for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformGoal_) {
+		for (WorldTransform* worldTransformBlockYoko : worldTransformBlockTate) {
+			if (!worldTransformBlockYoko)
+				continue;
+
+			modelGoal_->Draw(*worldTransformBlockYoko, viewProjection_);
+		}
+	}
+	
+
 	if (!player_->IsDead()) {
 		player_->Draw();
 	}
@@ -497,6 +546,9 @@ void GameScene::GenerateBlcoks()
 	// 要素数を変更する黄色
 	worldTransformBlocks4_.resize(numBlockVirticle);
 
+	// 要素数を変更する黄色
+	worldTransformGoal_.resize(numBlockVirticle);
+
 	// キューブの生成
 	for (uint32_t i = 0; i < numBlockVirticle; ++i) {
 		worldTransformBlocks_[i].resize(numBlockHorizontal);
@@ -515,6 +567,11 @@ void GameScene::GenerateBlcoks()
 	// キューブの生成黄色
 	for (uint32_t i = 0; i < numBlockVirticle; ++i) {
 		worldTransformBlocks4_[i].resize(numBlockHorizontal);
+	}
+
+	// キューブの生成ゴール
+	for (uint32_t i = 0; i < numBlockVirticle; ++i) {
+		worldTransformGoal_[i].resize(numBlockHorizontal);
 	}
 
 	for (uint32_t i = 0; i < numBlockVirticle; ++i) {
@@ -563,6 +620,18 @@ void GameScene::GenerateBlcoks()
 			}
 		}
 	}
+
+	// ゴール
+	for (uint32_t i = 0; i < numBlockVirticle; ++i) {
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
+			if (mapChipField_->GetMapChipTypeByIndex(j,i)==MapChipType::kGoal) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformGoal_[i][j] = worldTransform;
+				worldTransformGoal_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+			}
+		}
+	}
 }
 
 void GameScene::CheckAllCollisions()
@@ -576,6 +645,7 @@ void GameScene::CheckAllCollisions()
 
 		// 自キャラの座標
 		aabb1 = player_->GetAABB();
+
 
 		for (Enemy* enemy : enemies_) {
 			// 敵弾の座標

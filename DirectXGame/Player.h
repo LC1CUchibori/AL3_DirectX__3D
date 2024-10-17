@@ -48,6 +48,7 @@ public:
 
 	void MoveInput();
 
+
 	// マップとのあたり判定情報
 	struct CollisionMapInfo
 	{
@@ -116,8 +117,6 @@ public:
 	// デスフラグのGetter
 	bool IsDead()const { return isDead_; }
 
-
-
 private:
 	// デスフラグ
 	bool  isDead_ = false;
@@ -165,6 +164,9 @@ private:
 	static inline const float kBlank = 18.0f;
 
 	static inline const float firstSpeed = 1.0f;
+
+	// ゴールしたら
+	/*bool goalHit_ = false;*/
 
 	ObjectColor objectColor_;
 	Vector4 color_;

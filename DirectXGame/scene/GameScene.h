@@ -15,6 +15,7 @@
 #include "AABB.h"
 #include "DeathParticles.h"
 #include "myMath.h"
+#include "Goal.h"
 #include <vector>
 
 
@@ -95,6 +96,7 @@ private: // メンバ変数
 	Model* modelEnemy_ = nullptr;
 	Model* modelEnemy2_ = nullptr;
 	Model* modelEnemy3_ = nullptr;
+	Model* modelGoal_ = nullptr;
 	Model* modelDeathParticlse_ = nullptr;
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
@@ -108,14 +110,17 @@ private: // メンバ変数
 	// 縦横ブロック配列
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
-	// 縦横ブロック配列
+	// 縦横ブロック配列 赤
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks2_;
 
-	// 縦横ブロック配列
+	// 縦横ブロック配列 青
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks3_;
 
-	// 縦横ブロック配列
+	// 縦横ブロック配列 黄
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks4_;
+
+	// 縦横ブロック配列 ゴール
+	std::vector<std::vector<WorldTransform*>> worldTransformGoal_;
 
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
@@ -126,6 +131,7 @@ private: // メンバ変数
 	Skydome* skydome_ = nullptr;
 	// 3Dモデル
 	Model* modelSkydome_ = nullptr;
+
 
 	// マップチップフィールド
 	MapChipField* mapChipField_;
