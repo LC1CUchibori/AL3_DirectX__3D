@@ -8,7 +8,7 @@
 
 enum class MapChipType {
 	kBlank, // 空白
-	lBlock, // ブロック
+	kBlock, // ブロック
 	kRedBlock,
 	kBlueBlock,
 	kYellowBlock,

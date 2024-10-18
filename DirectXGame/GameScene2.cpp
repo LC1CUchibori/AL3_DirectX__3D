@@ -1,12 +1,11 @@
-#include "GameScene.h"
+#include "GameScene2.h"
 #include "TextureManager.h"
-#include "myMath.h"
 #include <cassert>
 #include <algorithm>
 
-GameScene::GameScene() {}
+GameScene2::GameScene2() {}
 
-GameScene::~GameScene() {
+GameScene2::~GameScene2() {
 	delete model_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -73,7 +72,7 @@ GameScene::~GameScene() {
 	enemies_.clear();
 }
 
-void GameScene::Initialize() {
+void GameScene2::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -140,14 +139,14 @@ void GameScene::Initialize() {
 
 	std::vector<Enemy::ColorState>enemyColor = {
 		Enemy::ColorState::Red,
-	    Enemy::ColorState::Blue,
-	    Enemy::ColorState::Yellow,
+		Enemy::ColorState::Blue,
+		Enemy::ColorState::Yellow,
 	};
 
 	// 敵
 	for (int32_t i= 0; i < 3; ++i) {
 		Enemy*newEnemy = new Enemy();
-		
+
 		newEnemy->Initialize(modelEnemy_,modelEnemy2_,modelEnemy3_, &viewProjection_, enemyPositions[i],enemyColor[i]);
 		enemies_.push_back(newEnemy);
 	}
@@ -158,7 +157,7 @@ void GameScene::Initialize() {
 	deathParticles_->Initialize(modelDeathParticlse_, &viewProjection_, playerPosition);
 
 	modelGoal_ = Model::CreateFromOBJ("Goal",true);
-	
+
 
 	phase_ = Phase::kPlay;
 
@@ -170,7 +169,7 @@ void GameScene::Initialize() {
 	color_ = { 1,1,1,1 };
 }
 
-void GameScene::Update() {
+void GameScene2::Update() {
 
 	ChangePhase();
 
@@ -402,7 +401,7 @@ void GameScene::Update() {
 }
 
 
-void GameScene::Draw() {
+void GameScene2::Draw() {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
@@ -489,7 +488,7 @@ void GameScene::Draw() {
 			modelGoal_->Draw(*worldTransformBlockYoko, viewProjection_);
 		}
 	}
-	
+
 
 	if (!player_->IsDead()) {
 		player_->Draw();
@@ -501,11 +500,11 @@ void GameScene::Draw() {
 
 	switch (phase_)
 	{
-	case GameScene::Phase::kPlay:
+	case GameScene2::Phase::kPlay:
 		// 自キャラの描画
 		player_->Draw();
 		break;
-	case GameScene::Phase::kDeath:
+	case GameScene2::Phase::kDeath:
 		break;
 	}
 
@@ -529,7 +528,7 @@ void GameScene::Draw() {
 
 }
 
-void GameScene::GenerateBlcoks()
+void GameScene2::GenerateBlcoks()
 {
 	uint32_t numBlockVirticle = mapChipField_->GetNumBlockVirtical();
 	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
@@ -634,7 +633,7 @@ void GameScene::GenerateBlcoks()
 	}
 }
 
-void GameScene::CheckAllCollisions()
+void GameScene2::CheckAllCollisions()
 {
 	{
 #pragma region 自キャラと敵キャラの当たり判定
@@ -647,7 +646,7 @@ void GameScene::CheckAllCollisions()
 		aabb1 = player_->GetAABB();
 
 
-		
+
 
 		for (Enemy* enemy : enemies_) {
 			// 敵弾の座標
@@ -681,7 +680,7 @@ void GameScene::CheckAllCollisions()
 #pragma endregion
 }
 
-void GameScene::ChangePhase()
+void GameScene2::ChangePhase()
 {
 	switch (phase_){
 	case Phase::kPlay:
@@ -709,3 +708,4 @@ void GameScene::ChangePhase()
 		break;
 	}
 }
+#pragma endregion
