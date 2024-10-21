@@ -117,6 +117,10 @@ public:
 	// デスフラグのGetter
 	bool IsDead()const { return isDead_; }
 
+	bool IsGoalReached() const { return goalReached_; } // Getter for goalReached_
+
+	void SetGoalReached(bool reached) { goalReached_ = reached; } // Setter for goalReached_
+
 private:
 	// デスフラグ
 	bool  isDead_ = false;
@@ -164,6 +168,8 @@ private:
 	static inline const float kBlank = 18.0f;
 
 	static inline const float firstSpeed = 1.0f;
+
+	bool goalReached_ = false; // ゴールに達したかどうかのフラグ
 
 	// ゴールしたら
 	/*bool goalHit_ = false;*/

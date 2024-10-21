@@ -186,6 +186,8 @@ void GameScene::Update() {
 
 	ChangePhase();
 
+	//AdvanceToNextStage();
+
 	switch (phase_){
 	case Phase::kPlay:
 
@@ -301,6 +303,12 @@ void GameScene::Update() {
 			viewProjection_.matProjection = cameraController_->GetViewProjection().matProjection;
 			// ビュープロジェクションの転送
 			viewProjection_.TransferMatrix();
+		}
+
+		if (player_->IsGoalReached()) {
+			AdvanceToNextStage(); // 次のステージに進む
+
+
 		}
 
 #ifdef _DEBUG
@@ -650,6 +658,23 @@ void GameScene::GenerateBlcoks()
 void GameScene::CheckAllCollisions()
 {
 	{
+		// プレイヤーとゴールの当たり判定
+		AABB playerAABB = player_->GetAABB();
+		for (std::vector<WorldTransform*>& goalLine : worldTransformGoal_) {
+			for (WorldTransform* goalTransform : goalLine) {
+				if (goalTransform == nullptr)
+					continue;
+
+				AABB goalAABB;
+				goalAABB.min = {goalTransform->translation_.x - 0.5f, goalTransform->translation_.y - 0.5f, goalTransform->translation_.z - 0.5f};
+				goalAABB.max = {goalTransform->translation_.x + 0.5f, goalTransform->translation_.y + 0.5f, goalTransform->translation_.z + 0.5f};
+
+				if (IsCollision(playerAABB, goalAABB)) {
+					player_->SetGoalReached(true); // ゴールに到達したことを設定
+					return;                        // ゴールに達したので、これ以上の判定は必要ない
+				}
+			}
+		}
 #pragma region 自キャラと敵キャラの当たり判定
 
 		// 判定対象1と2の座標
@@ -720,5 +745,15 @@ void GameScene::ChangePhase()
 			finished_=true;
 		}
 		break;
+	case Phase::kNextStage:
+		finished_ = true;
+		
+		break;
 	}
+}
+
+void GameScene::AdvanceToNextStage()
+{
+
+	phase_ = Phase::kNextStage;
 }

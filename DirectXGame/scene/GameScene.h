@@ -62,6 +62,8 @@ public: // メンバ関数
 	/// </summary>
 	void ChangePhase();
 
+	void AdvanceToNextStage();
+
 	bool IsFinished() const { return finished_; }
 
 	/// <summary>
@@ -146,6 +148,7 @@ private: // メンバ変数
 	enum class Phase{
 		kPlay,   // ゲームプレイ
 		kDeath,  // デス演出
+		kNextStage,
 	};
 
 	// ゲームの現在フェーズ(変数)
