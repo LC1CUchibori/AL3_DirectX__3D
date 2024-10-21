@@ -121,6 +121,8 @@ public:
 
 	void SetGoalReached(bool reached) { goalReached_ = reached; } // Setter for goalReached_
 
+	
+
 private:
 	// デスフラグ
 	bool  isDead_ = false;

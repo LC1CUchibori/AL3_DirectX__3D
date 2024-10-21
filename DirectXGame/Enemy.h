@@ -50,6 +50,7 @@ public:
 
 	ColorState currentColorState_ = ColorState::Red;
 
+
 private:
     // ワールドトランスフォーム
 	WorldTransform worldTransform_;

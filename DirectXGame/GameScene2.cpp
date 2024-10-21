@@ -1,5 +1,6 @@
 #include "GameScene2.h"
 #include "TextureManager.h"
+#include "myMath.h"
 #include <cassert>
 #include <algorithm>
 
@@ -134,17 +135,29 @@ void GameScene2::Initialize() {
 	std::vector<Vector3> enemyPositions = {
 		{8.0f, 2.0f, 0.0f},
 		{8.0f, 4.0f, 0.0f},
-		{8.0f, 6.0f, 0.0f}
+		{8.0f, 6.0f, 0.0f},
+		{15.0f, 2.0f, 0.0f},  // 新しい敵の位置
+		{15.0f, 4.0f, 0.0f},  // 新しい敵の位置
+		{15.0f, 6.0f, 0.0f},  // 新しい敵の位置
+		{20.0f, 2.0f, 0.0f},  // 新しい敵の位置
+		{20.0f, 4.0f, 0.0f},  // 新しい敵の位置
+		{20.0f, 6.0f, 0.0f}   // 新しい敵の位置
 	};
 
 	std::vector<Enemy::ColorState>enemyColor = {
 		Enemy::ColorState::Red,
 		Enemy::ColorState::Blue,
 		Enemy::ColorState::Yellow,
+		Enemy::ColorState::Red,    // 新しい敵の色
+		Enemy::ColorState::Blue,   // 新しい敵の色
+		Enemy::ColorState::Yellow,  // 新しい敵の色
+		Enemy::ColorState::Red,    // 新しい敵の色
+		Enemy::ColorState::Blue,   // 新しい敵の色
+		Enemy::ColorState::Yellow   // 新しい敵の色
 	};
 
 	// 敵
-	for (int32_t i= 0; i < 3; ++i) {
+	for (int32_t i= 0; i < 9; ++i) {
 		Enemy*newEnemy = new Enemy();
 
 		newEnemy->Initialize(modelEnemy_,modelEnemy2_,modelEnemy3_, &viewProjection_, enemyPositions[i],enemyColor[i]);
@@ -172,6 +185,8 @@ void GameScene2::Initialize() {
 void GameScene2::Update() {
 
 	ChangePhase();
+
+	//AdvanceToNextStage();
 
 	switch (phase_){
 	case Phase::kPlay:
@@ -290,6 +305,12 @@ void GameScene2::Update() {
 			viewProjection_.TransferMatrix();
 		}
 
+		if (player_->IsGoalReached()) {
+			AdvanceToNextStage(); // 次のステージに進む
+
+
+		}
+
 #ifdef _DEBUG
 		if (input_->TriggerKey(DIK_SPACE)) {
 			if (isDebugCameraActive_ == true)
@@ -298,6 +319,7 @@ void GameScene2::Update() {
 				isDebugCameraActive_ = true;
 		}
 #endif
+
 
 		// 全てのあたり判定を行う
 		CheckAllCollisions();
@@ -636,6 +658,23 @@ void GameScene2::GenerateBlcoks()
 void GameScene2::CheckAllCollisions()
 {
 	{
+		// プレイヤーとゴールの当たり判定
+		AABB playerAABB = player_->GetAABB();
+		for (std::vector<WorldTransform*>& goalLine : worldTransformGoal_) {
+			for (WorldTransform* goalTransform : goalLine) {
+				if (goalTransform == nullptr)
+					continue;
+
+				AABB goalAABB;
+				goalAABB.min = {goalTransform->translation_.x - 0.5f, goalTransform->translation_.y - 0.5f, goalTransform->translation_.z - 0.5f};
+				goalAABB.max = {goalTransform->translation_.x + 0.5f, goalTransform->translation_.y + 0.5f, goalTransform->translation_.z + 0.5f};
+
+				if (IsCollision(playerAABB, goalAABB)) {
+					player_->SetGoalReached(true); // ゴールに到達したことを設定
+					return;                        // ゴールに達したので、これ以上の判定は必要ない
+				}
+			}
+		}
 #pragma region 自キャラと敵キャラの当たり判定
 
 		// 判定対象1と2の座標
@@ -706,6 +745,15 @@ void GameScene2::ChangePhase()
 			finished_=true;
 		}
 		break;
+	case Phase::kNextStage:
+		finished_ = true;
+
+		break;
 	}
 }
-#pragma endregion
+
+void GameScene2::AdvanceToNextStage()
+{
+
+	phase_ = Phase::kNextStage;
+}

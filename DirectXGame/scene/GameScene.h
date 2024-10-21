@@ -64,6 +64,8 @@ public: // メンバ関数
 
 	void AdvanceToNextStage();
 
+	void Reset();
+
 	bool IsFinished() const { return finished_; }
 
 	/// <summary>
@@ -76,6 +78,7 @@ public: // メンバ関数
 			(a.min.z <= b.max.z && a.max.z >= b.min.z);
 	}
 
+	void ResetStage();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
