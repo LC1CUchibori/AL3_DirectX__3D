@@ -136,18 +136,30 @@ void GameScene::Initialize() {
 		{8.0f, 2.0f, 0.0f},
 		{8.0f, 4.0f, 0.0f},
 		{8.0f, 6.0f, 0.0f},
+		{15.0f, 2.0f, 0.0f},  // 新しい敵の位置
+		{15.0f, 4.0f, 0.0f},  // 新しい敵の位置
+		{15.0f, 6.0f, 0.0f},  // 新しい敵の位置
+		{20.0f, 2.0f, 0.0f},  // 新しい敵の位置
+		{20.0f, 4.0f, 0.0f},  // 新しい敵の位置
+		{20.0f, 6.0f, 0.0f}   // 新しい敵の位置
 	};
 
 	std::vector<Enemy::ColorState>enemyColor = {
 		Enemy::ColorState::Red,
-	    Enemy::ColorState::Blue,
-	    Enemy::ColorState::Yellow,
+		Enemy::ColorState::Blue,
+		Enemy::ColorState::Yellow,
+		Enemy::ColorState::Red,    // 新しい敵の色
+		Enemy::ColorState::Blue,   // 新しい敵の色
+		Enemy::ColorState::Yellow,  // 新しい敵の色
+		Enemy::ColorState::Red,    // 新しい敵の色
+		Enemy::ColorState::Blue,   // 新しい敵の色
+		Enemy::ColorState::Yellow   // 新しい敵の色
 	};
 
 	// 敵
-	for (int32_t i= 0; i < 3; ++i) {
+	for (int32_t i= 0; i < 9; ++i) {
 		Enemy*newEnemy = new Enemy();
-		
+
 		newEnemy->Initialize(modelEnemy_,modelEnemy2_,modelEnemy3_, &viewProjection_, enemyPositions[i],enemyColor[i]);
 		enemies_.push_back(newEnemy);
 	}
@@ -158,7 +170,7 @@ void GameScene::Initialize() {
 	deathParticles_->Initialize(modelDeathParticlse_, &viewProjection_, playerPosition);
 
 	modelGoal_ = Model::CreateFromOBJ("Goal",true);
-	
+
 
 	phase_ = Phase::kPlay;
 
@@ -300,6 +312,7 @@ void GameScene::Update() {
 		}
 #endif
 
+
 		// 全てのあたり判定を行う
 		CheckAllCollisions();
 		break;
@@ -398,9 +411,6 @@ void GameScene::Update() {
 			deathParticles_->Update();
 		}
 		break;
-	case Phase::kNextStage:
-
-			break;
 	}
 }
 
@@ -492,7 +502,7 @@ void GameScene::Draw() {
 			modelGoal_->Draw(*worldTransformBlockYoko, viewProjection_);
 		}
 	}
-	
+
 
 	if (!player_->IsDead()) {
 		player_->Draw();
@@ -650,7 +660,7 @@ void GameScene::CheckAllCollisions()
 		aabb1 = player_->GetAABB();
 
 
-		
+
 
 		for (Enemy* enemy : enemies_) {
 			// 敵弾の座標
@@ -679,13 +689,6 @@ void GameScene::CheckAllCollisions()
 				// 敵弾の衝突判定コールバックを呼び出す
 				enemy->OnCollision(player_);
 			}
-		}
-		// プレイヤーとゴールのあたり判定
-		AABB playerAABB = player_->GetAABB();
-		AABB goalAABB;
-
-		if (IsCollision(playerAABB, goalAABB)) {
-			AdvanceToNextStage();
 		}
 	}
 #pragma endregion
@@ -717,31 +720,5 @@ void GameScene::ChangePhase()
 			finished_=true;
 		}
 		break;
-	case Phase::kNextStage:
-
 	}
-}
-
-void GameScene::AdvanceToNextStage()
-{
-	finished_ = true;
-	phase_ = Phase::kNextStage;
-}
-
-
-bool GameScene::CheckCollisionWithGoal() {
-	// プレイヤーの位置を取得
-	Vector3 playerPosition = player_->GetWorldPosition();
-
-	// ゴールの位置を取得（仮にゴールが一つだけと仮定）
-	Vector3 goalPosition = worldTransformGoal_[0][0]->translation_;
-
-	// 衝突範囲の定義
-	float collisionDistance = 1.0f; // この値は適宜調整してください
-
-	// 距離の計算
-	float distance = (playerPosition.x - goalPosition.x).Length();
-
-	// 衝突判定
-	return distance <= collisionDistance;
 }

@@ -62,9 +62,6 @@ public: // メンバ関数
 	/// </summary>
 	void ChangePhase();
 
-
-	void AdvanceToNextStage();
-
 	bool IsFinished() const { return finished_; }
 
 	/// <summary>
@@ -76,9 +73,6 @@ public: // メンバ関数
 			(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
 			(a.min.z <= b.max.z && a.max.z >= b.min.z);
 	}
-
-	bool CheckCollisionWithGoal();
-
 
 
 private: // メンバ変数
@@ -152,7 +146,6 @@ private: // メンバ変数
 	enum class Phase{
 		kPlay,   // ゲームプレイ
 		kDeath,  // デス演出
-		kNextStage,
 	};
 
 	// ゲームの現在フェーズ(変数)
