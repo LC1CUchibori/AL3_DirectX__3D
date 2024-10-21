@@ -135,7 +135,7 @@ void GameScene::Initialize() {
 	std::vector<Vector3> enemyPositions = {
 		{8.0f, 2.0f, 0.0f},
 		{8.0f, 4.0f, 0.0f},
-		{8.0f, 6.0f, 0.0f}
+		{8.0f, 6.0f, 0.0f},
 	};
 
 	std::vector<Enemy::ColorState>enemyColor = {
@@ -398,6 +398,9 @@ void GameScene::Update() {
 			deathParticles_->Update();
 		}
 		break;
+	case Phase::kNextStage:
+
+			break;
 	}
 }
 
@@ -677,6 +680,13 @@ void GameScene::CheckAllCollisions()
 				enemy->OnCollision(player_);
 			}
 		}
+		// プレイヤーとゴールのあたり判定
+		AABB playerAABB = player_->GetAABB();
+		AABB goalAABB;
+
+		if (IsCollision(playerAABB, goalAABB)) {
+			AdvanceToNextStage();
+		}
 	}
 #pragma endregion
 }
@@ -707,5 +717,31 @@ void GameScene::ChangePhase()
 			finished_=true;
 		}
 		break;
+	case Phase::kNextStage:
+
 	}
+}
+
+void GameScene::AdvanceToNextStage()
+{
+	finished_ = true;
+	phase_ = Phase::kNextStage;
+}
+
+
+bool GameScene::CheckCollisionWithGoal() {
+	// プレイヤーの位置を取得
+	Vector3 playerPosition = player_->GetWorldPosition();
+
+	// ゴールの位置を取得（仮にゴールが一つだけと仮定）
+	Vector3 goalPosition = worldTransformGoal_[0][0]->translation_;
+
+	// 衝突範囲の定義
+	float collisionDistance = 1.0f; // この値は適宜調整してください
+
+	// 距離の計算
+	float distance = (playerPosition.x - goalPosition.x).Length();
+
+	// 衝突判定
+	return distance <= collisionDistance;
 }
