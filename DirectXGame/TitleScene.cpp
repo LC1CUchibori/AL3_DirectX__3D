@@ -10,7 +10,15 @@ void TitleScene::Initialize()
 	Timer_ = 0.0f;
 
 	// タイトルを近づける
-	titleWorldTransform_.translation_ = { 0.0f, 1.0f, -40.0f };  // z値を調整して近づける
+	titleWorldTransform_.translation_ = { 0.0f, 0.0f, -40.0f };  // z値を調整して近づける
+
+	// 天球の生成
+	skydome_ = new Skydome();
+	// 天球3Dモデルの生成
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	// 天球の初期化
+	skydome_->Initialize(modelSkydome_,&viewProjection_);
+	
 }
 
 void TitleScene::Update()
@@ -25,6 +33,10 @@ void TitleScene::Update()
 	titleWorldTransform_.rotation_.y = radian * (std::numbers::pi_v<float> / 90.0f);
 	// 行列計算
 	titleWorldTransform_.UpdateMatrix();
+
+	// 天球の更新
+	skydome_->Update();
+
 }
 
 void TitleScene::Draw()
@@ -35,5 +47,10 @@ void TitleScene::Draw()
 
 	titlemodel_->Draw(titleWorldTransform_, viewProjection_);
 
+	// 天球の描画
+	skydome_->Draw();
+
 	Model::PostDraw();
+
+
 }

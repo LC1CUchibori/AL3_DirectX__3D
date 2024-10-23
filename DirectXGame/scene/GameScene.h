@@ -17,6 +17,7 @@
 #include "myMath.h"
 #include "Goal.h"
 #include <vector>
+#include "ClearScene.h"
 
 
 /// <summary>
@@ -78,7 +79,7 @@ public: // メンバ関数
 			(a.min.z <= b.max.z && a.max.z >= b.min.z);
 	}
 
-	void ResetStage();
+	bool IsClear()const { return isClear_; }
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -153,6 +154,8 @@ private: // メンバ変数
 		kDeath,  // デス演出
 		kNextStage,
 	};
+
+	bool isClear_ = false;
 
 	// ゲームの現在フェーズ(変数)
 	Phase phase_;

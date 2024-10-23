@@ -16,7 +16,7 @@ void Enemy::Initialize(Model* model, Model* model2, Model* model3, ViewProjectio
 	worldTransform_.rotation_.y = 3.14f / 2.0f;
 
 	// 速度を設定する
-	velocity_ = { -kWalkSpeed,0,0 };
+	//velocity_ = { -kWalkSpeed,0,0 };
 
 	// 時間を設定する
 	walkTimer_ = 0.0f;
@@ -29,7 +29,7 @@ void Enemy::Initialize(Model* model, Model* model2, Model* model3, ViewProjectio
 void Enemy::Update()
 {
 	// 移動
-	worldTransform_.translation_ += velocity_;
+	//worldTransform_.translation_ += velocity_;
 
 	// タイマーを加算
 	walkTimer_ += 1.0f / 60.0f;

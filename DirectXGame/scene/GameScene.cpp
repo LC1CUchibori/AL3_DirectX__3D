@@ -97,7 +97,17 @@ void GameScene::Initialize() {
 
 	// マップチップフィールドの生成
 	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resources/map.csv");
+	mapChipField_->LoadMapChipCsv("Resources/map1.csv");
+
+
+	// 天球の生成
+	skydome_ = new Skydome();
+	// 天球3Dモデルの生成
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	// 天球の初期化
+	skydome_->Initialize(modelSkydome_,&viewProjection_);
+
+	GenerateBlcoks();
 
 	// 自キャラの生成
 	player_ = new Player();
@@ -108,16 +118,6 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player_->Initialize(modelPlayer_,modelPlayer2_,modelPlayer3_,&viewProjection_,playerPosition);
 	player_->SetMapChipField(mapChipField_);
-
-
-	// 天球の生成
-	skydome_ = new Skydome();
-	// 天球3Dモデルの生成
-	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
-	// 天球の初期化
-	skydome_->Initialize(modelSkydome_,&viewProjection_);
-
-	GenerateBlcoks();
 
 	// カメラコントロールの初期化
 	cameraController_ = new CameraController();// 生成
@@ -133,9 +133,9 @@ void GameScene::Initialize() {
 	modelEnemy3_ = Model::CreateFromOBJ("YellowEnemy", true);
 
 	std::vector<Vector3> enemyPositions = {
-		{8.0f, 2.0f, 0.0f},
-		{8.0f, 4.0f, 0.0f},
-		{8.0f, 6.0f, 0.0f},
+		{8.0f, 2.0f, 0.2f},
+		{8.0f, 4.0f, 0.2f},
+		{8.0f, 6.0f, 0.2f},
 		{15.0f, 2.0f, 0.0f},  // 新しい敵の位置
 		{15.0f, 4.0f, 0.0f},  // 新しい敵の位置
 		{15.0f, 6.0f, 0.0f},  // 新しい敵の位置
@@ -180,6 +180,7 @@ void GameScene::Initialize() {
 	// 色
 	objectColor_.Initialize();
 	color_ = { 1,1,1,1 };
+
 }
 
 void GameScene::Update() {
@@ -307,7 +308,7 @@ void GameScene::Update() {
 
 		if (player_->IsGoalReached()) {
 			AdvanceToNextStage(); // 次のステージに進む
-
+			isClear_ = true;
 
 		}
 
@@ -456,6 +457,10 @@ void GameScene::Draw() {
 	// 天球の描画
 	skydome_->Draw();
 
+	if (!player_->IsDead()) {
+		player_->Draw();
+	}
+
 	// 敵の描画
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
@@ -511,10 +516,6 @@ void GameScene::Draw() {
 		}
 	}
 
-
-	if (!player_->IsDead()) {
-		player_->Draw();
-	}
 
 	if (deathParticles_) {
 		deathParticles_->Draw();
@@ -757,3 +758,4 @@ void GameScene::AdvanceToNextStage()
 
 	phase_ = Phase::kNextStage;
 }
+

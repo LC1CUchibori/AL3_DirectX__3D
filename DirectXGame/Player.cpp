@@ -15,7 +15,7 @@ void Player::Initialize(Model* model, Model* model2, Model* model3, ViewProjecti
 	worldTransform_.translation_ = position;
 
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / -2.0f;
-	worldTransform_.translation_.z =-0.1f;
+	worldTransform_.translation_.z =0.0f;
 
 
 	// 引数の内容をメンバ変数に記録
@@ -284,9 +284,9 @@ void Player::SwitchGrandState(const CollisionMapInfo& info) {
 void Player::SwithColorState()
 {
 	if (currentColorState == ColorState::Red) {
-		currentColorState = ColorState::Yellow;
-	} else if (currentColorState == ColorState::Yellow) {
 		currentColorState = ColorState::Blue;
+	} else if (currentColorState == ColorState::Blue) {
+		currentColorState = ColorState::Yellow;
 	} else {
 		currentColorState = ColorState::Red;
 	}
@@ -779,5 +779,7 @@ void Player::OnCollision(const Enemy* enemy)
 {
 	(void)enemy;
 
+
 	isDead_ = true;
 }
+

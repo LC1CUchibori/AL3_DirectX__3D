@@ -121,8 +121,6 @@ public:
 
 	void SetGoalReached(bool reached) { goalReached_ = reached; } // Setter for goalReached_
 
-	
-
 private:
 	// デスフラグ
 	bool  isDead_ = false;
@@ -173,7 +171,8 @@ private:
 
 	bool goalReached_ = false; // ゴールに達したかどうかのフラグ
 
-	// ゴールしたら
+
+	// ゴールしたら  Vector3 initialPosition_;
 	/*bool goalHit_ = false;*/
 
 	ObjectColor objectColor_;

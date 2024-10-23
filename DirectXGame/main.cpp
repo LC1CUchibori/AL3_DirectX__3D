@@ -1,3 +1,5 @@
+#pragma once
+
 
 #include "AxisIndicator.h"
 #include "DirectXCommon.h"
@@ -8,10 +10,12 @@
 #include "TextureManager.h"
 #include "TitleScene.h"
 #include "WinApp.h"
+#include "ClearScene.h"
 
 GameScene* gameScene = nullptr;
 GameScene2* gameScene2 = nullptr;
 TitleScene* titleScene = nullptr;
+ClearScene* clearScene = nullptr;
 
 enum class Scene {
 
@@ -20,6 +24,7 @@ enum class Scene {
 	kTitle,
 	kGame,
 	kGame2,
+	kClear,
 };
 
 Scene scene = Scene::kUnknown;
@@ -129,6 +134,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete titleScene;
 	delete gameScene;
 	delete gameScene2;
+	delete clearScene;
 
 	// 3Dモデル解放
 	Model::StaticFinalize();
@@ -159,22 +165,58 @@ void ChangeScene()
 		break;
 	case Scene::kGame:
 		if (gameScene->IsFinished()) {
-			// シーン変更
-			scene = Scene::kGame2;
-			// 旧シーンの解放
-			delete gameScene;
-			titleScene = nullptr;
-			// 新シーンの生成と初期化
-			gameScene2 = new GameScene2;
-			gameScene2->Initialize();
+			if (gameScene->IsClear()) {
+				// シーン変更
+				scene = Scene::kGame2;
+				// 旧シーンの解放
+				delete gameScene;
+				gameScene = nullptr;
+				// 新シーンの生成と初期化
+				gameScene2 = new GameScene2;
+				gameScene2->Initialize();
+			}
+			else{
+				// シーン変更
+				scene = Scene::kGame;
+				// 旧シーンの解放
+				delete gameScene;
+				gameScene = nullptr;
+				// 新シーンの生成と初期化
+				gameScene = new GameScene;
+				gameScene->Initialize();
+			}
 		}
 		break;
 	case Scene::kGame2:
 		if (gameScene2->IsFinished()) {
+			if (gameScene2->IsClear()) {
+				// シーン変更
+				scene = Scene::kClear;
+				// 旧シーンの変更
+				delete gameScene2;
+				gameScene2 = nullptr;
+				// 新シーンの生成と初期化
+				clearScene = new ClearScene;
+				clearScene->Initialize();
+			}
+			else{
+				// シーン変更
+				scene = Scene::kGame2;
+				// 旧シーンの変更
+				delete gameScene2;
+				gameScene2 = nullptr;
+				// 新シーンの生成と初期化
+				gameScene2 = new GameScene2;
+				gameScene2->Initialize();
+			}
+		}
+		break;
+	case Scene::kClear:
+		if (clearScene->IsFinished()) {
 			// シーン変更
 			scene = Scene::kTitle;
 			// 旧シーンの変更
-			delete gameScene2;
+			delete clearScene;
 			titleScene = nullptr;
 			// 新シーンの生成と初期化
 			titleScene = new TitleScene;
@@ -197,6 +239,9 @@ void UpdataScene()
 	case Scene::kGame2:
 		gameScene2->Update();
 		break;
+	case Scene::kClear:
+		clearScene->Update();
+		break;
 	}
 }
 
@@ -213,5 +258,9 @@ void DrawScene()
 	case Scene::kGame2:
 		gameScene2->Draw();
 		break;
+	case Scene::kClear:
+		clearScene->Draw();
+		break;
 	}
+	
 }

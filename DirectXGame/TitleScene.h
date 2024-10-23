@@ -5,6 +5,7 @@
 #include "WorldTransform.h"
 #include "DirectXCommon.h"
 #include "Input.h"
+#include "GameScene.h"
 /// <summary>
 /// タイトルシーン
 /// </summary>
@@ -42,4 +43,9 @@ private:
 	WorldTransform titleWorldTransform_;
 	ViewProjection viewProjection_;
 	Model* titlemodel_ = nullptr;
+
+	//天球
+	Skydome* skydome_ = nullptr;
+	// 3Dモデル
+	Model* modelSkydome_ = nullptr;
 };

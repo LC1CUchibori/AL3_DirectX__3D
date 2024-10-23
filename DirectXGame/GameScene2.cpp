@@ -113,7 +113,7 @@ void GameScene2::Initialize() {
 	// 天球の生成
 	skydome_ = new Skydome();
 	// 天球3Dモデルの生成
-	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_,&viewProjection_);
 
@@ -307,8 +307,7 @@ void GameScene2::Update() {
 
 		if (player_->IsGoalReached()) {
 			AdvanceToNextStage(); // 次のステージに進む
-
-
+			isClear_ = true;
 		}
 
 #ifdef _DEBUG
