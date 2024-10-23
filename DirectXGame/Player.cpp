@@ -74,6 +74,10 @@ void Player::Update() {
 	color_.w = std::clamp(0.0f, 0.0f, 1.0f);
 	objectColor_.SetColor(color_);
 	objectColor_.TransferMatrix();
+
+	if (worldTransform_.translation_.y <= -2.5f) {
+		isDead_ = true;
+	}
 }
 
 void Player::Draw() {

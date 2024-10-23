@@ -51,4 +51,7 @@ private:
 	Skydome* skydome_ = nullptr;
 	// 3Dモデル
 	Model* modelSkydome_ = nullptr;
+
+	/*uint32_t Rule_ = 0;
+	Sprite* sprite_ = nullptr;*/
 };

@@ -1,5 +1,6 @@
 #include "TitleScene.h"
 #include <numbers>
+#include <TextureManager.h>
 
 void TitleScene::Initialize()
 {
@@ -22,6 +23,10 @@ void TitleScene::Initialize()
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_,&viewProjection_);
+
+	/*Rule_ = TextureManager::Load("setumei.png");
+
+	sprite_ = Sprite::Create(Rule_, { 10,10 });*/
 	
 }
 
@@ -57,5 +62,10 @@ void TitleScene::Draw()
 
 	Model::PostDraw();
 
+	//// 背景スプライト描画前処理
+	//Sprite::PreDraw(commandList);
+	//sprite_->Draw();
+	//// スプライト描画後処理
+	//Sprite::PostDraw();
 
 }

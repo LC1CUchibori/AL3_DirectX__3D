@@ -97,7 +97,7 @@ void GameScene2::Initialize() {
 
 	// マップチップフィールドの生成
 	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resources/map.csv");
+	mapChipField_->LoadMapChipCsv("Resources/map2.csv");
 
 	// 自キャラの生成
 	player_ = new Player();
@@ -133,24 +133,24 @@ void GameScene2::Initialize() {
 	modelEnemy3_ = Model::CreateFromOBJ("YellowEnemy", true);
 
 	std::vector<Vector3> enemyPositions = {
-		{8.0f, 2.0f, 0.0f},
-		{8.0f, 4.0f, 0.0f},
-		{8.0f, 6.0f, 0.0f},
-		{15.0f, 2.0f, 0.0f},  // 新しい敵の位置
-		{15.0f, 4.0f, 0.0f},  // 新しい敵の位置
-		{15.0f, 6.0f, 0.0f},  // 新しい敵の位置
-		{20.0f, 2.0f, 0.0f},  // 新しい敵の位置
+		{8.0f, 18.0f, 0.0f},
+		{8.0f, 16.0f, 0.0f},
+		{8.0f, 14.0f, 0.0f},
+		{26.0f, 8.0f, 0.0f},  // 新しい敵の位置
+		{27.5f, 8.0f, 0.0f},  // 新しい敵の位置
+		{29.0f, 8.0f, 0.0f},  // 新しい敵の位置
+		{20.0f, 5.0f, 0.0f},  // 新しい敵の位置
 		{20.0f, 4.0f, 0.0f},  // 新しい敵の位置
 		{20.0f, 6.0f, 0.0f}   // 新しい敵の位置
 	};
 
 	std::vector<Enemy::ColorState>enemyColor = {
-		Enemy::ColorState::Red,
-		Enemy::ColorState::Blue,
 		Enemy::ColorState::Yellow,
-		Enemy::ColorState::Red,    // 新しい敵の色
+		Enemy::ColorState::Yellow,
+		Enemy::ColorState::Yellow,
+		Enemy::ColorState::Blue,    // 新しい敵の色
 		Enemy::ColorState::Blue,   // 新しい敵の色
-		Enemy::ColorState::Yellow,  // 新しい敵の色
+		Enemy::ColorState::Blue,  // 新しい敵の色
 		Enemy::ColorState::Red,    // 新しい敵の色
 		Enemy::ColorState::Blue,   // 新しい敵の色
 		Enemy::ColorState::Yellow   // 新しい敵の色

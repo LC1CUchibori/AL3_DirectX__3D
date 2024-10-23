@@ -133,31 +133,37 @@ void GameScene::Initialize() {
 	modelEnemy3_ = Model::CreateFromOBJ("YellowEnemy", true);
 
 	std::vector<Vector3> enemyPositions = {
-		{8.0f, 2.0f, 0.2f},
-		{8.0f, 4.0f, 0.2f},
-		{8.0f, 6.0f, 0.2f},
-		{15.0f, 2.0f, 0.0f},  // 新しい敵の位置
-		{15.0f, 4.0f, 0.0f},  // 新しい敵の位置
-		{15.0f, 6.0f, 0.0f},  // 新しい敵の位置
-		{20.0f, 2.0f, 0.0f},  // 新しい敵の位置
-		{20.0f, 4.0f, 0.0f},  // 新しい敵の位置
-		{20.0f, 6.0f, 0.0f}   // 新しい敵の位置
+		{6.0f, 1.0f, 0.2f},
+		{6.0f, 3.0f, 0.2f},
+		{6.0f, 5.0f, 0.2f},
+		{15.0f, 1.0f, 0.0f},  // 新しい敵の位置
+		{15.0f, 3.0f, 0.0f},  // 新しい敵の位置
+		{15.0f, 5.0f, 0.0f},  // 新しい敵の位置
+		{22.0f, 3.0f, 0.0f},  // 新しい敵の位置
+		{22.0f, 5.0f, 0.0f},  // 新しい敵の位置
+		{22.0f, 7.0f, 0.0f},   // 新しい敵の位置
+	    {28.0f, 5.0f, 0.0f},  // 新しい敵の位置
+		{28.0f, 7.0f, 0.0f},  // 新しい敵の位置
+		{28.0f, 9.0f, 0.0f}   // 新しい敵の位置
 	};
 
 	std::vector<Enemy::ColorState>enemyColor = {
-		Enemy::ColorState::Red,
-		Enemy::ColorState::Blue,
 		Enemy::ColorState::Yellow,
+		Enemy::ColorState::Yellow,
+		Enemy::ColorState::Red,
 		Enemy::ColorState::Red,    // 新しい敵の色
+		Enemy::ColorState::Red,   // 新しい敵の色
+		Enemy::ColorState::Blue,  // 新しい敵の色
+		Enemy::ColorState::Blue,    // 新しい敵の色
 		Enemy::ColorState::Blue,   // 新しい敵の色
-		Enemy::ColorState::Yellow,  // 新しい敵の色
-		Enemy::ColorState::Red,    // 新しい敵の色
-		Enemy::ColorState::Blue,   // 新しい敵の色
-		Enemy::ColorState::Yellow   // 新しい敵の色
+		Enemy::ColorState::Yellow,   // 新しい敵の色
+		Enemy::ColorState::Yellow,    // 新しい敵の色
+		Enemy::ColorState::Yellow,   // 新しい敵の色
+		Enemy::ColorState::Red   // 新しい敵の色
 	};
 
 	// 敵
-	for (int32_t i= 0; i < 9; ++i) {
+	for (int32_t i= 0; i < 12; ++i) {
 		Enemy*newEnemy = new Enemy();
 
 		newEnemy->Initialize(modelEnemy_,modelEnemy2_,modelEnemy3_, &viewProjection_, enemyPositions[i],enemyColor[i]);
