@@ -41,8 +41,11 @@ private:
 	bool finished_ = false;
 	DirectXCommon* dxCommon_ = nullptr;
 	WorldTransform titleWorldTransform_;
+	WorldTransform PushSpaceWorldTransform_;
 	ViewProjection viewProjection_;
+	ViewProjection pushSpaceViewProjection_;
 	Model* titlemodel_ = nullptr;
+	Model* pushSpaceModel_ = nullptr;
 
 	//天球
 	Skydome* skydome_ = nullptr;

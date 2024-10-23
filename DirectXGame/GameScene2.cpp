@@ -124,7 +124,7 @@ void GameScene2::Initialize() {
 	cameraController_->Initialize();
 	cameraController_->SetTarget(player_);
 	cameraController_->Reset();
-	CameraController::Rect movableArea_ = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
+	CameraController::Rect movableArea_ = {12.0f, 100 - 12.0f, 6.0f, 12.0f};
 	cameraController_->SetMovableArea(movableArea_);
 
 

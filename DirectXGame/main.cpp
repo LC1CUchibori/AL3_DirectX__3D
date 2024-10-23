@@ -46,7 +46,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
-	win->CreateGameWindow();
+	win->CreateGameWindow(L"2163_色変");
 
 	// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();
@@ -212,7 +212,7 @@ void ChangeScene()
 		}
 		break;
 	case Scene::kClear:
-		if (clearScene->IsFinished()) {
+		if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
 			// シーン変更
 			scene = Scene::kTitle;
 			// 旧シーンの変更

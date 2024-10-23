@@ -227,6 +227,9 @@
     <ClInclude Include="GameScene2.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
+    <ClInclude Include="ClearScene.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\SpritePS.hlsl">

@@ -67,7 +67,7 @@ void Player::Update() {
 	// 行列計算
 	worldTransform_.UpdateMatrix();
 
-	if (Input::GetInstance()->TriggerKey(DIK_1)) {
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		SwithColorState();
 	}
 

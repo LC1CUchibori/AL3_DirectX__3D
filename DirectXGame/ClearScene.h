@@ -5,7 +5,7 @@
 #include "WorldTransform.h"
 #include "DirectXCommon.h"
 #include "Input.h"
-
+#include "GameScene.h"
 
 class ClearScene{
 public:
@@ -28,5 +28,15 @@ public:
 private:
 
 	bool finished_ = false;
+
+	DirectXCommon* dxCommon_ = nullptr;
+	WorldTransform EnterWorldTransform_;
+	ViewProjection viewProjection_;
+	//天球
+	Skydome* skydome_ = nullptr;
+	// 3Dモデル
+	Model* modelSkydome_ = nullptr;
+	Model* Entermodel_ = nullptr;
+	Model* ClearBestmodel_ = nullptr;
 };
 

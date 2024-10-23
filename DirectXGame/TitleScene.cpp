@@ -5,12 +5,16 @@ void TitleScene::Initialize()
 {
 	dxCommon_ = DirectXCommon::GetInstance();
 	titlemodel_ = Model::CreateFromOBJ("title", true);
+	pushSpaceModel_ = Model::CreateFromOBJ("PushSpace", true);
 	titleWorldTransform_.Initialize();
 	viewProjection_.Initialize();
+	PushSpaceWorldTransform_.Initialize();
+	pushSpaceViewProjection_.Initialize();
 	Timer_ = 0.0f;
 
 	// タイトルを近づける
 	titleWorldTransform_.translation_ = { 0.0f, 0.0f, -40.0f };  // z値を調整して近づける
+	PushSpaceWorldTransform_.translation_ = { 0.0f,0.0f,-20.0f };
 
 	// 天球の生成
 	skydome_ = new Skydome();
@@ -46,6 +50,7 @@ void TitleScene::Draw()
 	Model::PreDraw(commandList);
 
 	titlemodel_->Draw(titleWorldTransform_, viewProjection_);
+	pushSpaceModel_->Draw(PushSpaceWorldTransform_, pushSpaceViewProjection_);
 
 	// 天球の描画
 	skydome_->Draw();

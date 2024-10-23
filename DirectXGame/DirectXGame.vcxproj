@@ -150,6 +150,7 @@
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="CameraController.h" />
+    <ClInclude Include="ClearScene.h" />
     <ClInclude Include="DeathParticles.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameScene2.h" />
