@@ -11,17 +11,20 @@
 #include "TitleScene.h"
 #include "WinApp.h"
 #include "ClearScene.h"
+#include "Rulescene.h"
 
 GameScene* gameScene = nullptr;
 GameScene2* gameScene2 = nullptr;
 TitleScene* titleScene = nullptr;
 ClearScene* clearScene = nullptr;
+RuleScene* ruleScene = nullptr;
 
 enum class Scene {
 
 	kUnknown = 0,
 
 	kTitle,
+	kRule,
 	kGame,
 	kGame2,
 	kClear,
@@ -132,6 +135,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// 各種解放
 	delete titleScene;
+	delete ruleScene;
 	delete gameScene;
 	delete gameScene2;
 	delete clearScene;
@@ -154,10 +158,22 @@ void ChangeScene()
 	case Scene::kTitle:
 		if (titleScene->IsFinished()) {
 			// シーン変更
-			scene = Scene::kGame;
+			scene = Scene::kRule;
 			// 旧シーンの解放
 			delete titleScene;
 			titleScene = nullptr;
+			// 新シーンの生成と初期化
+			ruleScene = new RuleScene;
+			ruleScene->Initialize();
+		}
+		break;
+	case Scene::kRule:
+		if (ruleScene->IsFinished()) {
+			// シーン変更
+			scene = Scene::kGame;
+			// 旧シーンの解放
+			delete ruleScene;
+			ruleScene = nullptr;
 			// 新シーンの生成と初期化
 			gameScene = new GameScene;
 			gameScene->Initialize();
@@ -233,6 +249,9 @@ void UpdataScene()
 	case Scene::kTitle:
 		titleScene->Update();
 		break;
+	case Scene::kRule:
+		ruleScene->Update();
+		break;
 	case Scene::kGame:
 		gameScene->Update();
 		break;
@@ -252,6 +271,9 @@ void DrawScene()
 	case Scene::kTitle:
 		titleScene->Draw();
 		break;
+	case Scene::kRule:
+		ruleScene->Draw();
+		break;
 	case Scene::kGame:
 		gameScene->Draw();
 		break;
@@ -262,5 +284,5 @@ void DrawScene()
 		clearScene->Draw();
 		break;
 	}
-	
+
 }

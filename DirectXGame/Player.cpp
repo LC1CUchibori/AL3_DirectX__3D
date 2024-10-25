@@ -28,7 +28,7 @@ void Player::Initialize(Model* model, Model* model2, Model* model3, ViewProjecti
 	objectColor_.Initialize();
 	color_ = { 1,1,1,1 };
 
-	
+
 }
 
 void Player::Update() {
@@ -104,7 +104,7 @@ void Player::MoveInput() {
 	// 接地状態
 	if (onGround_) {
 		// 左右移動操作
-		if (Input::GetInstance()->PushKey(DIK_D) || Input::GetInstance()->PushKey(DIK_A)) {
+		if (Input::GetInstance()->PushKey(DIK_D ) || Input::GetInstance()->PushKey(DIK_A)) {
 
 			// 左右加速
 			Vector3 acceleration = {};

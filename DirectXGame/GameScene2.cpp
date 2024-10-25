@@ -136,12 +136,10 @@ void GameScene2::Initialize() {
 		{8.0f, 18.0f, 0.0f},
 		{8.0f, 16.0f, 0.0f},
 		{8.0f, 14.0f, 0.0f},
-		{26.0f, 8.0f, 0.0f},  // 新しい敵の位置
 		{27.5f, 8.0f, 0.0f},  // 新しい敵の位置
-		{29.0f, 8.0f, 0.0f},  // 新しい敵の位置
-		{20.0f, 5.0f, 0.0f},  // 新しい敵の位置
-		{20.0f, 4.0f, 0.0f},  // 新しい敵の位置
-		{20.0f, 6.0f, 0.0f}   // 新しい敵の位置
+		{33.5f, 12.0f, 0.0f},  // 新しい敵の位置
+		{30.0f, 8.0f, 0.0f},  // 新しい敵の位置
+		
 	};
 
 	std::vector<Enemy::ColorState>enemyColor = {
@@ -151,13 +149,10 @@ void GameScene2::Initialize() {
 		Enemy::ColorState::Blue,    // 新しい敵の色
 		Enemy::ColorState::Blue,   // 新しい敵の色
 		Enemy::ColorState::Blue,  // 新しい敵の色
-		Enemy::ColorState::Red,    // 新しい敵の色
-		Enemy::ColorState::Blue,   // 新しい敵の色
-		Enemy::ColorState::Yellow   // 新しい敵の色
 	};
 
 	// 敵
-	for (int32_t i= 0; i < 9; ++i) {
+	for (int32_t i= 0; i < 6; ++i) {
 		Enemy*newEnemy = new Enemy();
 
 		newEnemy->Initialize(modelEnemy_,modelEnemy2_,modelEnemy3_, &viewProjection_, enemyPositions[i],enemyColor[i]);

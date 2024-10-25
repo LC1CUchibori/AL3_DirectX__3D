@@ -120,6 +120,7 @@
     <ClCompile Include="MathUtilityForText.cpp" />
     <ClCompile Include="myMath.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Rulescene.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="skydome.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="myMath.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Rulescene.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="skydome.h" />
     <ClInclude Include="TitleScene.h" />
